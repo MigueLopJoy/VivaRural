@@ -1,21 +1,9 @@
-.page-section.page-banner {
-    position: relative;
+.banner-img-container {
     padding-top: 6rem;
     padding-bottom: 6rem;
-    background-image: url(./../MEDIA/IMGS/banner-pueblo.png);
     background-size: cover;
     background-position: center 15%;
     background-repeat: no-repeat;
-}
-
-.page-section.page-banner::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background:rgba(0, 0, 0, 0.2);
 }
 
 .page-title-container {
@@ -24,6 +12,7 @@
 }
 
 .img-container img {
+    aspect-ratio: 16/9 !important;
     max-width: 100%;
 }
 
@@ -33,5 +22,5 @@
 
 .page-footer {
     background-color: #222;
-    padding: ;
+    color: #fff;
 }

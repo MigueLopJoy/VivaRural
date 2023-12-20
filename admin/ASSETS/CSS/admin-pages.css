@@ -1,0 +1,63 @@
+/* EDITABLE CONTENT STYLES */
+
+.banner-img-container {
+    background-image: url("./../MEDIA/IMGS/example-banner.png");
+}
+
+.banner-img-container:hover,
+.page-title-container:hover {
+    transform: scale(1.1);
+    outline: 2px solid #222;
+}
+
+.page-article h2:hover,
+.page-article p:hover,
+.page-article img:hover {
+    padding: 1rem;
+    transform: scale(1.1);
+    outline: 2px solid #222;
+    background-color: #fff;
+}
+
+.page-article img:hover,
+.banner-img-container:hover {
+    cursor: pointer;
+}
+
+.page-title-container:hover {
+    cursor: auto;
+}
+
+/* ADD NEW ELEMENTS BTN STYLES */
+
+.add-element-btn {
+    cursor: pointer;
+    background-color: #66ff66;
+    border: .75rem solid #aaffaa;
+    text-align: center;
+    color: #fff;
+}
+
+.add-element-btn:hover {
+    background-color: #88ff88;
+    border-color: #bbffbb;
+}
+
+.add-element-btn span {
+    color: #fff;
+    font-size: 1.5rem;
+    line-height: 36px;
+    margin: .25rem;
+}
+
+/* OFFCANVAS NEW ELEMENTS MENU STYLES */
+
+.elements-side-menu a {
+    color: #222;
+    text-decoration: none !important;
+}
+
+.elements-side-menu a:hover,
+.elements-side-menu a:hover p {
+    color: #666;
+}
