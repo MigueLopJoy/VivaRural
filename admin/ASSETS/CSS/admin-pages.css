@@ -57,7 +57,7 @@
     text-decoration: none !important;
 }
 
-.elements-side-menu a:hover,
+.elements-side-menu a:hover h4,
 .elements-side-menu a:hover p {
     color: #666;
 }

@@ -1,12 +1,13 @@
 <?php
-    $host = "localhost:3306";
-    $user = "root";
-    $password = "";
-    $database = "vivarural";
 
     function connect()
     {
-        $connection = new mysqli($this->host, $this->user, $this->password, $this->database);
+        $host = "localhost:3306";
+        $user = "root";
+        $password = "";
+        $database = "vivarural";
+
+        $connection = new mysqli($host, $user, $password, $database);
 
         if ($connection->connect_error) {
             echo "$connection->connect_error";
@@ -22,7 +23,7 @@
 
     function getSingleSearchResult($sql)
     {
-        $result = $this->executeSql($sql);
+        $result = executeSql($sql);
         if ($result !== null) {
             return $result->fetch_assoc();
         }
@@ -31,7 +32,7 @@
 
     function getMultipleSearchResult($sql)
     {
-        $result = $this->executeSql($sql);
+        $result = executeSql($sql);
         if ($result !== null) {
             return $result->fetch_all(MYSQLI_ASSOC);
         }
@@ -40,10 +41,10 @@
 
     function executeSql($sql)
     {
-        $connection = $this->connect();
+        $connection = connect();
         $result = $connection->query($sql);
         if ($result && $result->num_rows > 0) {
-            $this->close($connection);
+            close($connection);
             return $result;
         }
         return null;

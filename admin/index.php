@@ -1,10 +1,14 @@
 <?php
     include "./ASSETS/PHP/LAYERS/rendering-methods.php";
+    include "./ASSETS/PHP/SERVICES/dbConnection.php";
     include "./ASSETS/PHP/SERVICES/towns-service.php";
+    include "./ASSETS/PHP/SERVICES/pages-service.php";
+    include "./ASSETS/PHP/SERVICES/articles-service.php";
     
     renderHeader();
-    if (isset($_GET['create-page'])) {
-        renderNewPageEditor();
+    if (isset($_GET['page-editor'])) {
+        $pageInfo = handlePageInfo();
+        renderPageEditor($pageInfo);
     } else {
         renderWrapper();
         if (isset($_GET['create-town'])) {
