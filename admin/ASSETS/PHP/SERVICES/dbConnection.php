@@ -1,20 +1,10 @@
 <?php
-class DBConnection
-{
-    private $host;
-    private $user;
-    private $password;
-    private $database;
+    $host = "localhost:3306";
+    $user = "root";
+    $password = "";
+    $database = "vivarural";
 
-    public function __construct()
-    {
-        $this->host = "localhost:3306";
-        $this->user = "root";
-        $this->password = "";
-        $this->database = "vivarural";
-    }
-
-    public function connect()
+    function connect()
     {
         $connection = new mysqli($this->host, $this->user, $this->password, $this->database);
 
@@ -25,12 +15,12 @@ class DBConnection
         return $connection;
     }
 
-    public function close($connenction)
+    function close($connenction)
     {
         $connenction->close();
     }
 
-    public function getSingleSearchResult($sql)
+    function getSingleSearchResult($sql)
     {
         $result = $this->executeSql($sql);
         if ($result !== null) {
@@ -39,7 +29,7 @@ class DBConnection
         return null;
     }
 
-    public function getMultipleSearchResult($sql)
+    function getMultipleSearchResult($sql)
     {
         $result = $this->executeSql($sql);
         if ($result !== null) {
@@ -48,7 +38,7 @@ class DBConnection
         return array();
     }
 
-    private function executeSql($sql)
+    function executeSql($sql)
     {
         $connection = $this->connect();
         $result = $connection->query($sql);
@@ -58,4 +48,4 @@ class DBConnection
         }
         return null;
     }
-}
+?>

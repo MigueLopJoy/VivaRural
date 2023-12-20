@@ -1,12 +1,17 @@
 <?php
-    include "./ASSETS/PHP/LAYERS/layers.php";
+    include "./ASSETS/PHP/LAYERS/rendering-methods.php";
+    include "./ASSETS/PHP/SERVICES/towns-service.php";
     
-    include "./ASSETS/PHP/LAYERS/header.php";
-
-    if (isset($_GET['create-town'])) {
-        renderCreateTownLayer();
+    renderHeader();
+    if (isset($_GET['create-page'])) {
+        renderNewPageEditor();
     } else {
-        renderSearchEngineLayer();
+        renderWrapper();
+        if (isset($_GET['create-town'])) {
+            renderCreateTownLayer();
+        } else {
+            renderSearchEngineLayer();
+        }
     }
 
     include "./ASSETS/PHP/LAYERS/footer.php";
