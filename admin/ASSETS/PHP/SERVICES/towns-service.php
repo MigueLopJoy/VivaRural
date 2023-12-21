@@ -16,14 +16,14 @@
     }
 
     function getLastInsertedTownId() {
-        $sql = 'SELECT MAX(townId) FROM towns;';
+        $sql = 'SELECT MAX(townId) as townId FROM towns;';
         return getSingleSearchResult($sql);
     }
 
     function findTownByTownData($townData) {
         $townInfo = null;
         if (isset($townData['townName'])) {
-            $townInfo = findTownByIdentifier(($townInfo['townName']));
+            $townInfo = findTownByTownName(($townData['townName']));
         }
         return $townInfo;
     }
@@ -32,7 +32,7 @@
         $sql =
         '
         SELECT * FROM towns t
-        WHERE t.townName = ' . $townName . ';
+        WHERE t.townName = "' . $townName . '";
         ';
         return getSingleSearchResult($sql);
     }

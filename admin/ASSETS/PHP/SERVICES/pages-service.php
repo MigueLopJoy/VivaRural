@@ -2,18 +2,22 @@
     function handlePageInfo() {
         $pageInfo = null;
         $pageId = 0;
+        
         if (isset($_GET['create-page'])) {
             insertTownInfo($_POST);
             createNewPage();
-            $pageId = getLastInsertedPageId();
-        } else if (isset($_GET['show-page'])) {
-            $townInfo = findTownByTownData($_POST);
-            $townId = $townInfo['townId'];
-            $pageId = getPageIdFromTownId($townId);
-            $pageInfo = findPageInfoByPageId($_POST);
-        } else if (isset($_GET['new-template'])) {
-            insertArticle($_GET['new-template']);
-        }
+            $pageId = (getLastInsertedPageId())['pageId'];
+        } else {
+            if (!isset($_SESSION['pageId'])) {
+                $townInfo = findTownByTownData($_POST);
+                $townId = $townInfo['townId'];
+                $pageId = getPageIdFromTownId($townId);
+            } else {
+                $pageId = $_SESSION['pageId'];
+            }
+            $pageInfo = getPageContentFromPageId($pageId);
+        } 
+
         if (!isset($_SESSION['pageId'])) {
             $_SESSION['pageId'] = $pageId;
         }
@@ -21,8 +25,7 @@
     }
 
     function createNewPage() {
-        $townId = getLastInsertedTownId();
-
+        $townId = getLastInsertedTownId()['townId'];
         $connection = connect();
         $insertQuery = "insert into town_pages(townId) values(?)";
         $statement = $connection->prepare($insertQuery);
@@ -33,15 +36,15 @@
     }
 
     function getLastInsertedPageId() {
-        $sql = 'SELECT MAX(pageId) FROM town_pages;';
+        $sql = 'SELECT MAX(pageId) as pageId FROM town_pages;';
         return getSingleSearchResult($sql);
     }
 
-    function findPageByPageId($townInfo) {
+    function getPageContentFromPageId($pageId) {
         $pageArticles = findArticlesByPageId($pageId);
         $articles = array();
         foreach ($pageArticles as $key => $article) {
-            $articleId = $article['articleId'];
+            $articleId = $article['articleid'];
             $articleElements = findArticleElementsByArticleId($articleId);
             $articles[] = array(
                 'articleNumber' => $key,
@@ -55,9 +58,8 @@
     function getPageIdFromTownId($townId) {
         $sql = 
             '
-            SELECT * FROM `town_pages` tp
-            INNER JOIN towns t
-            ON tp.townId = '. $townId .';
+            SELECT pageId FROM `town_pages` tp
+            WHERE tp.townId = '. $townId .';
             ';
         return getSingleSearchResult($sql);
     }

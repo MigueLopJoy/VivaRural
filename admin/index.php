@@ -5,8 +5,12 @@
     include "./ASSETS/PHP/SERVICES/pages-service.php";
     include "./ASSETS/PHP/SERVICES/articles-service.php";
     
+    session_start();
     renderHeader();
     if (isset($_GET['page-editor'])) {
+        if (isset($_GET['new-template'])) {
+            insertArticle($_GET['new-template']);
+        } 
         $pageInfo = handlePageInfo();
         renderPageEditor($pageInfo);
     } else {

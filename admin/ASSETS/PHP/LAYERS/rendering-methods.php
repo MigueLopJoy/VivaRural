@@ -46,7 +46,7 @@
         echo
         '
         <div class="search-engine-container">
-            <form action="?page-editor&show-page" class="form search-form">
+            <form action="?page-editor&show-page" method="POST" class="form search-form">
                 <input type="text" name="townName" placeholder="Town Name">
                 <input type="submit" value="Search">
             </form>
@@ -107,12 +107,12 @@
         ';
 
         foreach ($articles as $key => $article) {
-            switch ($article['template']) {
+            switch ($article['templateType']) {
                 case '1':
-                    renderTemplate1($articleInfo);
+                    renderTemplate1($article);
                     break;
                 case '2':
-                    renderTemplate2($articleInfo);
+                    renderTemplate2($article);
                     break;
             }
         }
@@ -180,8 +180,8 @@
 
     function renderAddNewElementBtn() {
         echo '
-        <div class="row">
-            <div class="col-12 text-center">
+        <div class="row mb-4">
+            <div class="col-12 text-center px-0">
                 <div class="d-inline-block add-element-btn rounded-circle">
                     <button class="navbar-toggler" data-bs-toggle="offcanvas" data-bs-target="#sidebar"
                         aria-controls="sidebar">
