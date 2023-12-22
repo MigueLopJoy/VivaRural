@@ -47,6 +47,7 @@
             $articleId = $article['articleid'];
             $articleElements = findArticleElementsByArticleId($articleId);
             $articles[] = array(
+                'articleId' => $articleId,
                 'articleNumber' => $key,
                 'templateType' => $article['templateType'],
                 'elements' => $articleElements

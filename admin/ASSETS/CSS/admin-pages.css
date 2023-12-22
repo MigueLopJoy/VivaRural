@@ -10,6 +10,11 @@
     outline: 2px solid #222;
 }
 
+.page-article {
+    position: relative;
+}
+
+.page-article:hover,
 .page-article h2:hover,
 .page-article p:hover,
 .page-article img:hover {
@@ -26,6 +31,71 @@
 
 .page-title-container:hover {
     cursor: auto;
+}
+
+.page-article:hover .delete-article-btn,
+.page-article:hover .save-content-btn {
+    display: block;
+}
+
+
+.delete-article-btn {
+    position: absolute;
+    display: none;
+}
+
+.delete-article-btn span {
+    cursor: pointer;
+    color: #ff0000;
+}
+
+.delete-article-btn span:hover {
+    color: #ccc;
+}
+
+.delete-article-btn span:active {
+    color: #ff0000;
+}
+
+.template-1 .delete-article-btn {
+    top: 1rem;
+    right: 1rem;
+}
+
+.template-2 .delete-article-btn {
+    top: 1rem;
+    left: 1rem;
+}
+
+.save-content-btn {
+    position: absolute;
+    display: none;
+}
+
+.save-content-btn button {
+    background-color: #aaffaa;
+    border: 1px solid #88ff88;
+    border-radius: .25rem;
+    padding: .5rem 1.5rem;
+    color: #fff;
+}
+
+.save-content-btn button:hover {
+    background-color: #88ff88;
+}
+
+.save-content-btn button:active {
+    background-color: #aaffaa;
+}
+
+.template-1 .save-content-btn {
+    bottom: 1rem;
+    right: 1rem;
+}
+
+.template-2 .save-content-btn {
+    bottom: 1rem;
+    left: 1rem;
 }
 
 /* ADD NEW ELEMENTS BTN STYLES */

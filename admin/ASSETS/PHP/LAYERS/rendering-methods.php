@@ -84,8 +84,8 @@
     function renderBanner($pageInfo) {
         echo '
         <section class="page-section page-banner mb-5">
-            <input type="file" id="imageInput" accept="image/*" class="image-upload d-none">
-            <label for="imageInput" class="editable-image-label w-100 h-100">
+            <input type="file" id="banner-imageinput" accept="image/*" class="image-upload d-none">
+            <label for="banner-image-input" class="editable-image-label w-100 h-100">
                 <div class="banner-img-container w-100 h-100">
                     <div class="container-fluid page-header py-5">
                         <div class="container text-center py-5 h-auto">
@@ -107,72 +107,85 @@
         ';
 
         foreach ($articles as $key => $article) {
+            $elements = $article['elements'];
+            $articleElements = array(
+                "image-url" => isset($elements['elementType']) && $elements['elementType'] === "image-url" 
+                    ? $articleElements['elementType'] : "./ASSETS/MEDIA/IMGS/section-example.png",
+                "article-title" => isset($elements['elementType']) && $elements['elementType'] === "article-title" 
+                    ? $articleElements['article-title'] : "Article Title",
+                "article-text" => isset($elements['elementType']) && $elements['elementType'] === "article-text" 
+                    ? $articleElements['article-text'] : "Write Your Text Here"
+            );
             switch ($article['templateType']) {
                 case '1':
-                    renderTemplate1($article);
+                    renderTemplate1($articleElements, $article['articleId']);
                     break;
                 case '2':
-                    renderTemplate2($article);
+                    renderTemplate2($articleElements, $article['articleId']);
                     break;
             }
         }
-        echo '
-            </div>
-        </section>
-        ';
     }
 
-    function renderTemplate1($articleInfo) {
+    function renderTemplate1($articleElements, $articleId) {
         echo '
-        <article class="page-article mb-5">
-            <div class="row">
+        <article class="page-article template-1 mb-5">
+            <div class="delete-article-btn"><a href="?handle-article&delete-article= '.$articleId.'"><span>X</span></a></div>
+            <div class="row mb-2">
                 <div class="col-6">
                     <div class="img-container">
-                        <input type="file" id="imageInput" accept="image/*" class="image-upload d-none">
-                        <label for="imageInput" class="editable-image-label">
-                            <img src="./ASSETS/MEDIA/IMGS/section-example.png" class="editable-image img-fluid"
+                        <input type="file" id="article-'.$articleId.'-image-input" accept="image/*" class="image-upload d-none">
+                        <label for="article-'.$articleId.'-image-input" class="editable-image-label">
+                            <img src="'.$articleElements['image-url'].'" class="editable-image img-fluid"
                                 alt="Article town image">
                         </label>
                     </div>
                 </div>
                 <div class="col-6">
-                    <div class="article-title-container">
-                        <h2 contenteditable="true">Article title</h2>
+                    <div class="article-title-container text-center">
+                        <h2 class="article-title d-inline-block" contenteditable="true">"'.$articleElements['article-title'].'"</h2>
                     </div>
                     <div class="article-text-container">
-                        <p contenteditable="true">
-                            Write your text here.
+                        <p class="article-text" contenteditable="true">
+                            "'.$articleElements['article-text'].'"
                         </p>
                     </div>
                 </div>
+            </div>
+            <div class="save-content-btn">
+                <button>Save</button>
             </div>
         </article>
         ';
     }
 
-    function renderTemplate2($articleInfo) {
+    function renderTemplate2($articleElements, $articleId) {
         echo '
-        <article class="page-article mb-5">
-            <div class="row">
+        <article class="page-article template-2 mb-5">
+            <div class="delete-article-btn"><a href="?handle-article&delete-article= '.$articleId.'"><span>X</span></a></div>
+            <div class="row mb-2">
                 <div class="col-6">
-                    <div class="article-title-container">
-                        <h2 contenteditable="true">Article title</h2>
+                    <div class="article-title-container text-center">
+                        <h2 class="article-title d-inline-block" contenteditable="true">"'.$articleElements['article-title'].'"</h2>
                     </div>
                     <div class="article-text-container">
-                        <p contenteditable="true">
-                            Write your text here.
+                        <p class="article-text" contenteditable="true">
+                            "'.$articleElements['article-text'].'"
                         </p>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="img-container">
-                        <input type="file" id="imageInput" accept="image/*" class="image-upload d-none">
-                        <label for="imageInput" class="editable-image-label">
-                            <img src="./ASSETS/MEDIA/IMGS/section-example.png" class="editable-image img-fluid"
+                        <input type="file" id="article-'.$articleId.'-image-input" accept="image/*" class="image-upload d-none">
+                        <label for="article-'.$articleId.'-image-input" class="editable-image-label">
+                            <img src="'.$articleElements['image-url'].'" class="editable-image img-fluid"
                                 alt="Article town image">
                         </label>
                     </div>
                 </div>
+            </div>
+            <div class="save-content-btn">
+                <button articleId="'.$articleId.'">Save</button></a>
             </div>
         </article>
         ';
@@ -205,13 +218,13 @@
                 <div class="offcanvas-body">
                     <ul class="list-unstyled">
                         <li class="mb-3">
-                            <a href="?page-editor&new-template=1">
+                            <a href="?handle-article&new-template=1">
                                 <h4 class="mb-0">Artículo 1</h4>
                                 <p>Imagen a la izquierda y texto a la derecha</p>
                             </a>
                         </li>
                         <li class="mb-3">
-                            <a href="?page-editor&new-template=2">
+                            <a href="?handle-article&new-template=2">
                                 <h4 class="mb-0">Artículo 2</h4>
                                 <p>Texto a la izquierda e imagen a la derecha</p>
                             </a>

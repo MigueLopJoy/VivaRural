@@ -7,10 +7,16 @@
     
     session_start();
     renderHeader();
-    if (isset($_GET['page-editor'])) {
-        if (isset($_GET['new-template'])) {
-            insertArticle($_GET['new-template']);
-        } 
+
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        echo "imagen cargada";
+        exit();
+    }
+
+    if (isset($_GET['handle-article'])) {
+        handleArticles();
+    } else if (isset($_GET['page-editor'])) {
         $pageInfo = handlePageInfo();
         renderPageEditor($pageInfo);
     } else {
