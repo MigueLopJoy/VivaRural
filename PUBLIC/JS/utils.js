@@ -1,5 +1,21 @@
 const d = document
 
+d.addEventListener("click", e => {
+    if (e.target.matches(".open-auth-modal i")) {
+        openModal()
+    } else if (e.target.matches(".close-modal")) {
+        closeModal()
+    }
+})
+
+const openModal = () => {
+    d.querySelector('.auth-overlay').classList.remove('d-none')
+}
+
+const closeModal = () => {
+    d.querySelector('.auth-overlay').classList.remove('d-none')
+}
+
 const loadHtmlComponent = async (url, parentElement) => {
     let res = await fetch(url),
         layer = await res.text()
@@ -25,5 +41,6 @@ const getCookie = name => {
 
 export {
     loadHtmlComponent,
+    closeModal,
     getCookie
 }

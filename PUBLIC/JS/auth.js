@@ -1,5 +1,7 @@
 import { fetchHandler, getRequestData } from "./fetchHandler.js"
 
+import { closeModal, getCookie } from "./utils.js"
+
 const d = document,
     loginContainer = d.querySelector(".login-container"),
     loginBtn = d.querySelector(".nav-link.login"),
@@ -32,7 +34,7 @@ d.addEventListener("submit", e => {
 })
 
 const login = async () => {
-    let url = "./../../API/auth-service.php?login",
+    let url = "./../API/auth-service.php?login",
         userData = {
             email: loginForm.email.value,
             password: loginForm.password.value
@@ -40,15 +42,15 @@ const login = async () => {
     try {
         let loginResult = await fetchHandler(url, getRequestData("POST", JSON.stringify(userData)))
         document.cookie = 'userId=' + loginResult
-
-        window.location.href = './../index.html'
+        closeModal()
+        console.log(getCookie())
     } catch (error) {
         d.querySelector('.login-error').classList.remove('d-none')
     }
 }
 
 const register = async () => {
-    let url = "./../../API/auth-service.php?register",
+    let url = "./../API/auth-service.php?register",
         userData = {
             firstname: registerForm.firstname.value,
             lastname: registerForm.lastname.value,

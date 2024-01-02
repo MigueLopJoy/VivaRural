@@ -12,12 +12,6 @@ d.addEventListener("DOMContentLoaded", async () => {
     await loadHtmlComponent("./HTML/footer.html", d.querySelector("body"))
 })
 
-d.addEventListener("click", e => {
-    if (e.target === loginButton) {
-
-    }
-})
-
 const renderDestinations = async () => {
     let destinations = await getDestinations()
     for (let i = 0; i < destinations.length; i++) {
