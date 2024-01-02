@@ -1,68 +1,83 @@
 <?php
-    function handlePageInfo() {
-        $pageInfo = null;
-        $pageId = 0;
-        
-        if (isset($_GET['create-page'])) {
-            insertTownInfo($_POST);
-            createNewPage();
-            $pageId = (getLastInsertedPageId())['pageId'];
-        } else {
-            if (!isset($_SESSION['pageId'])) {
-                $townInfo = findTownByTownData($_POST);
-                $townId = $townInfo['townId'];
-                $pageId = getPageIdFromTownId($townId);
-            } else {
-                $pageId = $_SESSION['pageId'];
-            }
-            $pageInfo = getPageContentFromPageId($pageId);
-        } 
 
-        if (!isset($_SESSION['pageId'])) {
-            $_SESSION['pageId'] = $pageId;
-        }
-        return $pageInfo;
-    }
+function loadTownPage()
+{
+    $pageId = $_SESSION['pageId'];
+    $pageInfo = getPageContentFromPageId($pageId);
+    renderPageEditor($pageInfo);
+}
 
-    function createNewPage() {
-        $townId = getLastInsertedTownId()['townId'];
-        $connection = connect();
-        $insertQuery = "insert into town_pages(townId) values(?)";
-        $statement = $connection->prepare($insertQuery);
-        $statement->bind_param("i", $townId);
-        $insertResult = $statement->execute();
-        close($connection);
-        return $insertResult;
-    }
+function editPageBanner()
+{
+    editPageBannerInfo(
+        $_FILES['banner-img-input']['name'],
+        $_SESSION['pageId']
+    );
+    insertAdminAction(4);
+    redirectToTownPage();
+}
 
-    function getLastInsertedPageId() {
-        $sql = 'SELECT MAX(pageId) as pageId FROM town_pages;';
-        return getSingleSearchResult($sql);
-    }
+function createTownAndTownPage()
+{
+    insertTownInfo($_POST);
+    insertNewPage();
+    $pageId = (getLastInsertedPageId())['pageId'];
+    $_SESSION['pageId'] = $pageId;
+    insertAdminAction(2);
+    redirectToTownPage();
+}
 
-    function getPageContentFromPageId($pageId) {
-        $pageArticles = findArticlesByPageId($pageId);
-        $articles = array();
-        foreach ($pageArticles as $key => $article) {
-            $articleId = $article['articleid'];
-            $articleElements = findArticleElementsByArticleId($articleId);
-            $articles[] = array(
-                'articleId' => $articleId,
-                'articleNumber' => $key,
-                'templateType' => $article['templateType'],
-                'elements' => $articleElements
-            );
-        }
-        return $articles;
-    }
+function searchTownPage()
+{
+    $townInfo = findTownByTownData($_POST);
+    $townId = $townInfo['townid'];
+    $pageId = (getPageIdFromTownId($townId))['pageId'];
+    $_SESSION['pageId'] = $pageId;
+    insertAdminAction(3);
+    redirectToTownPage();
+}
 
-    function getPageIdFromTownId($townId) {
-        $sql = 
-            '
+function redirectToTownPage()
+{
+    header("Location: ?page-editor");
+    exit();
+}
+
+function insertNewPage()
+{
+    $townId = getLastInsertedTownId()['townId'];
+    $thumbnail = $_POST['thumbnail'];
+    $connection = connect();
+    $insertQuery = "insert into town_pages(townId, thumbnail) values(?, ?)";
+    $statement = $connection->prepare($insertQuery);
+    $statement->bind_param("is", $townId, $thumbnail);
+    $insertResult = $statement->execute();
+    close($connection);
+    return $insertResult;
+}
+
+function editPageBannerInfo($newImage, $pageId)
+{
+    $sql = '
+        UPDATE town_pages tp
+        SET bannerImage = "' . $newImage . '"
+        WHERE tp.pageId = ' . $pageId . '
+    ';
+    executeSql($sql);
+}
+
+function getLastInsertedPageId()
+{
+    $sql = 'SELECT MAX(pageId) as pageId FROM town_pages;';
+    return getSingleSearchResult($sql);
+}
+
+function getPageIdFromTownId($townId)
+{
+    $sql =
+        '
             SELECT pageId FROM `town_pages` tp
-            WHERE tp.townId = '. $townId .';
-            ';
-        return getSingleSearchResult($sql);
-    }
-
-?>
+            WHERE tp.townId = ' . $townId . ';
+        ';
+    return getSingleSearchResult($sql);
+}

@@ -1,0 +1,106 @@
+:root {
+    --color-primary: #4CAF50;
+    --color-secondary: #8BC34A;
+    --color-text: #405200;
+    --color-background: #F5F5F5;
+    --color-accent: #87CEEB;
+    --color-rural: #8B4513;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* HEADER BEGIN */
+
+.page-header {
+    z-index: 2;
+}
+
+.site-menu i {
+    font-size: 2rem;
+}
+
+/* HEADER END */
+
+.banner-img-container {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+    background-size: cover;
+    background-position: center 15%;
+    background-repeat: no-repeat;
+}
+
+.page-title-container {
+    border-radius: .25rem;
+    background: rgba(0, 0, 0, 1) 75%;
+}
+
+.img-container img {
+    aspect-ratio: 16/9 !important;
+    max-width: 100%;
+    cursor: pointer;
+}
+
+.article-title-container h2 {
+    text-align: center;
+}
+
+/* COMMENTS SECTION BEGIN */
+
+.rating {
+    unicode-bidi: bidi-override;
+    direction: rtl;
+    text-align: left;
+}
+
+.rating input {
+    display: none;
+}
+
+.rating label,
+.comment-card .star {
+    display: inline-block;
+    padding: 5px;
+    font-size: 24px;
+    color: var(--color-rural);
+    cursor: pointer;
+}
+
+.rating label:hover,
+.rating label:hover~label,
+.rating input:checked~label {
+    color: var(--color-secondary);
+}
+
+.comments-form textarea,
+.comments-form input[type="text"] {
+    width: 100%;
+    padding: .5rem;
+    border: none;
+    margin-bottom: .75rem;
+    outline: none;
+}
+
+.comments-container {
+    background-color: #fff;
+}
+
+
+.comment-card {
+    border: 1px solid #ccc;
+    border-radius: .5rem;
+    overflow: hidden;
+}
+
+/* COMMENTS SECTION END */
+
+.page-footer {
+    background-color: #222;
+    color: #fff;
+}

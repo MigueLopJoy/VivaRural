@@ -1,74 +1,13 @@
-.box {
-    box-shadow: 0 0 0.25rem rgb(0, 0, 0, 0.25) !important;
-}
-
-.form {
-    display: flex;
-    flex-direction: column;
-}
-
-.form input {
-    padding: .5rem;
-    border-radius: .25rem;
-    margin-bottom: 1rem;
-    border: none;
-    border-bottom: 1px solid #ccc;
-    background-color: #f2f2f2;
-    outline: none;
-}
-
-.form input[type="submit"],
-button {
+.form input[type="file"] {
     cursor: pointer;
 }
 
-.form input[type="submit"]:hover {
-    cursor: pointer;
-    background-color: #ccc;
+.login-container p {
+    text-align: center;
+    margin-bottom: .5rem;
 }
 
-.program-wrapper {
-    max-width: 1200px;
-    height: 100%;
-    padding-top: 10rem;
-    margin: auto;
+.logout-icon i::before {
+    font-size: 2rem;
+    color: #fff !important;
 }
-
-.admin-container {
-    position: relative;
-    margin: auto;
-    padding: 1.5rem;
-    width: 45%;
-    height: auto;
-}
-
-.admin-menu {
-    position: absolute;
-    width: 100%;
-    display: flex;
-    top: 0;
-    right: 0;
-    background-color: #f2f2f2;
-}
-
-.admin-menu ul {
-    display: flex;
-}
-
-.admin-menu ul {
-    display: flex;
-}
-
-.admin-menu .nav-link {
-    padding: 1rem 2rem;
-    cursor: pointer;
-}
-
-.admin-menu .nav-link:hover {
-    background-color: #ccc;
-}
-
-.admin-window {
-    padding-top: 3rem;
-}
-
