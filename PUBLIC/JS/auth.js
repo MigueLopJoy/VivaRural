@@ -1,39 +1,34 @@
 import { fetchHandler, getRequestData } from "./fetchHandler.js"
 
-import { closeModal, getCookie } from "./utils.js"
+import { openModal, closeModal, getCookie } from "./utils.js"
 
-const d = document,
-    loginContainer = d.querySelector(".login-container"),
-    loginBtn = d.querySelector(".nav-link.login"),
-    registerContainer = d.querySelector(".register-container"),
-    registerBtn = d.querySelector(".nav-link.register"),
-    loginForm = d.querySelector(".form.login-form"),
-    registerForm = d.querySelector(".form.register-form")
-
+const d = document
 
 d.addEventListener("DOMContentLoaded", e => {
     notifyRegistrationSuccess()
 })
 
 d.addEventListener("click", e => {
-    if (e.target === loginBtn ||
-        e.target === registerBtn
-    ) {
-        loginContainer.classList.toggle("d-none")
-        registerContainer.classList.toggle("d-none")
+    if (e.target.matches(".open-register")) {
+        toggleAuthLayers()
     }
 })
 
 d.addEventListener("submit", e => {
     e.preventDefault()
-    if (e.target === loginForm) {
-        login()
-    } else if (e.target === registerForm) {
-        register()
+    if (e.target.matches(".login-form")) {
+        login(e.target)
+    } else if (e.target.matches(".register-form")) {
+        register(e.target)
     }
 })
 
-const login = async () => {
+const toggleAuthLayers = () => {
+    d.querySelector(".login-container").classList.toggle("d-none")
+    d.querySelector(".register-container").classList.toggle("d-none")
+}
+
+const login = async loginForm => {
     let url = "./../API/auth-service.php?login",
         userData = {
             email: loginForm.email.value,
@@ -43,13 +38,12 @@ const login = async () => {
         let loginResult = await fetchHandler(url, getRequestData("POST", JSON.stringify(userData)))
         document.cookie = 'userId=' + loginResult
         closeModal()
-        console.log(getCookie())
     } catch (error) {
         d.querySelector('.login-error').classList.remove('d-none')
     }
 }
 
-const register = async () => {
+const register = async registerForm => {
     let url = "./../API/auth-service.php?register",
         userData = {
             firstname: registerForm.firstname.value,
@@ -62,17 +56,17 @@ const register = async () => {
         }
     try {
         await fetchHandler(url, getRequestData("POST", JSON.stringify(userData)))
-        window.location.href = 'auth.html?registration-success=true'
+        window.location.href = '?registration-success=true'
     } catch (error) {
         d.querySelector(".registration-error").classList.remove("d-none")
     }
 }
 
-
 const notifyRegistrationSuccess = () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const successParam = urlParams.get('registration-success');
+    let urlParams = new URLSearchParams(window.location.search),
+        successParam = urlParams.get('registration-success')
     if (successParam === 'true') {
+        openModal()
         d.querySelector('.registration-success').classList.remove('d-none')
     }
 }

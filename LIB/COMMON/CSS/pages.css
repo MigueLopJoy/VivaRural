@@ -16,17 +16,7 @@ main {
     flex: 1;
 }
 
-/* HEADER BEGIN */
-
-.page-header {
-    z-index: 2;
-}
-
-.site-menu i {
-    font-size: 2rem;
-}
-
-/* HEADER END */
+/* BANNER BEGIN */
 
 .banner-img-container {
     padding-top: 6rem;
@@ -41,6 +31,10 @@ main {
     background: rgba(0, 0, 0, 1) 75%;
 }
 
+/* BANNER END */
+
+/* ARTICLES BEGIN */
+
 .img-container img {
     aspect-ratio: 16/9 !important;
     max-width: 100%;
@@ -50,6 +44,8 @@ main {
 .article-title-container h2 {
     text-align: center;
 }
+
+/* ARTICLES END */
 
 /* COMMENTS SECTION BEGIN */
 
@@ -75,7 +71,11 @@ main {
 .rating label:hover,
 .rating label:hover~label,
 .rating input:checked~label {
-    color: var(--color-secondary);
+    color: var(--color-primary);
+}
+
+.star.active {
+    color: var(--color-primary);
 }
 
 .comments-form textarea,
@@ -87,11 +87,6 @@ main {
     outline: none;
 }
 
-.comments-container {
-    background-color: #fff;
-}
-
-
 .comment-card {
     border: 1px solid #ccc;
     border-radius: .5rem;
@@ -99,8 +94,3 @@ main {
 }
 
 /* COMMENTS SECTION END */
-
-.page-footer {
-    background-color: #222;
-    color: #fff;
-}

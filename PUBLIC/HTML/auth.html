@@ -1,0 +1,45 @@
+<div class="auth-overlay position-fixed top-0 start-0 end-0 bottom-0 w-100 h-100 d-none">
+    <div class="wrapper w-100">
+        <div class="box m-auto position-relative w-25 shadow bg-white rounded p-5 pb-4">
+            <div class="close-btn-container"><span class="close-btn close-modal">X</span></div>
+            <div class=" box-window">
+                <div class="login-container">
+                    <p class="login-error d-none" style="color:#FF0000">Bad Credentials</p>
+                    <p class="registration-success d-none" style="color: #00FF00">User Registrated
+                        Successfully
+                    </p>
+                    <form method="POST" class="form login-form">
+                        <div class="form-group">
+                            <input type="text" name="email" placeholder="Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="password" placeholder="Password" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" name="login" value="SUBMIT">
+                        </div>
+                    </form>
+                    <div>
+                        <p>¿Todavía no tienes una cuenta?<a class="open-register">¡Regístrate!</a></p>
+                    </div>
+                </div>
+                <div class="register-container d-none">
+                    <p class="registration-error d-none" style="color: #FF0000;">Se produjo un error durante
+                        el
+                        registro
+                    </p>
+                    <form method="POST" class="form register-form">
+                        <input type="text" name="firstname" placeholder="Firstname" required>
+                        <input type="text" name="lastname" placeholder="Lastname" required>
+                        <input type="email" name="email" placeholder="Email" required>
+                        <input type="text" name="phoneNumber" placeholder="Phone Number" required>
+                        <input type="text" name="userName" placeholder="User Name" required>
+                        <input type="password" name="password" placeholder="Password" required>
+                        <input type="date" name="birthDate" required>
+                        <input type="submit" name="register" value="REGISTER">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

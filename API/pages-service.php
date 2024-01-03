@@ -10,16 +10,20 @@ if (isset($_GET['get-page'])) {
     $pageContent = getPageContentFromPageId($pageId);
     echo json_encode($pageContent);
 } else if (isset($_GET['save-comment'])) {
-    saveComment($_POST);
+    saveComment($_POST, $pageId);
+} else if (isset($_GET['get-comments'])) {
+    if (isset($_GET['pageId'])) {
+        $comments = getComments($_GET['pageId']);
+        echo json_encode($comments);
+    }
 }
 
 
-function saveComment($comment)
+function saveComment($comment, $pageId)
 {
     $userId = $_POST['userId'];
     $rating = $_POST['rating'];
     $comment = $_POST['comment'];
-    $pageId = 73;
 
     $connection = connect();
     $insertQuery = "insert into reviews(userId, rating, comment, pageId) values(?, ?, ?, ?)";
@@ -28,4 +32,18 @@ function saveComment($comment)
     $insertResult = $statement->execute();
     close($connection);
     return $insertResult;
+}
+
+function getComments($pageId)
+{
+    $sql = '
+        SELECT u.firstname, u.lastname, r.comment, r.rating 
+        FROM reviews r
+        INNER JOIN town_pages tp
+        ON r.pageId = tp.pageId
+        INNER JOIN users u
+        ON r.userId = u.userId
+        WHERE r.pageId = ' . $pageId . ';
+    ';
+    return getMultipleSearchResult($sql);
 }

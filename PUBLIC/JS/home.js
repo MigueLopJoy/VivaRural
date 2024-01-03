@@ -1,14 +1,13 @@
 import { fetchHandler } from "./fetchHandler.js"
 import {
-    loadHtmlComponent,
-    getCookie
+    loadHtmlComponent
 } from "./utils.js"
 
-const d = document,
-    loginButton = d.querySelector(".login-button")
+const d = document
 
 d.addEventListener("DOMContentLoaded", async () => {
     await renderDestinations()
+    await loadHtmlComponent("./HTML/auth.html", d.querySelector(".auth-container"))
     await loadHtmlComponent("./HTML/footer.html", d.querySelector("body"))
 })
 
@@ -33,8 +32,3 @@ const getDestinations = async () => {
     let url = "./../API/towns-service.php?get-destinations"
     return await fetchHandler(url)
 }
-
-d.addEventListener("DOMContentLoaded", e => {
-    let storedUserId = getCookie('userId')
-    console.log(storedUserId)
-})

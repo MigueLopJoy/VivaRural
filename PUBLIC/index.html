@@ -28,7 +28,7 @@
                         <li class="nav-item"><a href="#" class="nav-link">Explorar destinos</a></li>
                         <li class="nav-item"><a href="#" class="nav-link">¿Qué es VivaRural?</a></li>
                         <li class="nav-item"><a href="#" class="nav-link">Contacto</a></li>
-                        <li class="nav-item open-auth-modal">
+                        <li class="nav-item open-auth-modal ps-3 display-6">
                             <i class="bi bi-person-circle"></i>
                         </li>
                     </ul>
@@ -57,64 +57,18 @@
                 </div>
         </section>
 
-        <div class="auth-overlay position-fixed top-0 start-0 end-0 bottom-0 w-100 h-100 d-none">
-            <div class="wrapper w-100">
-                <div class="box m-auto position-relative w-25 shadow bg-white rounded p-5 pb-2">
-                    <div class="w-100 text-right"><span class="close-modal" style="color: #FF0000;">X</span></div>
-                    <div class="box-menu-container">
-                        <nav class="box-menu w-100 d-flex position-absolute top-0 start-0 end-0">
-                            <ul class="d-flex mb-0 p-0">
-                                <li class="nav-link login py-3 px-4">Login</li>
-                                <li class="nav-link register py-3 px-4">Register</li>
-                            </ul>
-                        </nav>
-                    </div>
-                    <div class="box-window pt-3">
-                        <div class="login-container">
-                            <p class="login-error d-none" style="color:#FF0000">Bad Credentials</p>
-                            <p class="registration-success d-none" style="color: #00FF00">User Registrated Successfully</p>
-                            <form method="POST" class="form login-form">
-                                <div class="form-group">
-                                    <input type="text" name="email" placeholder="Email" required>
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" name="password" placeholder="Password" required>
-                                </div>
-                                <div class="form-group">
-                                    <input type="submit" name="login" value="SUBMIT">
-                                </div>
-                            </form>
-                        </div>
-                        <div class="register-container d-none">
-                            <p class="registration-error d-none" style="color: #FF0000;">Se produjo un error durante el registro
-                            </p>
-                            <form method="POST" class="form register-form">
-                                <input type="text" name="firstname" placeholder="Firstname" required>
-                                <input type="text" name="lastname" placeholder="Lastname" required>
-                                <input type="email" name="email" placeholder="Email" required>
-                                <input type="text" name="phoneNumber" placeholder="Phone Number" required>
-                                <input type="text" name="userName" placeholder="User Name" required>
-                                <input type="password" name="password" placeholder="Password" required>
-                                <input type="date" name="birthDate" required>
-                                <input type="submit" name="register" value="REGISTER">
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <section class="auth-container"></section>
     </main>
 
     <template class="destination-template">
         <div class="col-4 destination">
-            <a class="card-link" href="./HTML/town-page.html?pageId=${destination.pageId}">
+            <a class="card-link" href="">
                 <div class="position-relative text-center">
                     <div class="img-container">
-                        <img class="img-fluid ratio" src="./../LIB/MEDIA/IMGS/${destination.thumbnail}"
-                            alt="${destination.townName}"></img>
+                        <img class="img-fluid ratio" src="" alt=""></img>
                     </div>
                     <div class="p-3 slide-content">
-                        <h4 class="destination-name mb-3">${destination.townName}</h4>
+                        <h4 class="destination-name mb-3"></h4>
                     </div>
                 </div>
             </a>
