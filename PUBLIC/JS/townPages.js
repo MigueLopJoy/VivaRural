@@ -1,4 +1,4 @@
-import { fetchHandler } from "./fetchHandler.js"
+import { fetchHandler, getRequestData } from "./fetchHandler.js"
 import { getCookie, loadHtmlComponent } from "./utils.js"
 
 const d = document,
@@ -21,17 +21,24 @@ d.addEventListener("submit", e => {
     }
 })
 
-const saveComment = commentsForm => {
-    let pageId = getPageId(),
-        comment = {
-            rating: commentsForm.rating.value,
-            pageId,
-            userId: 1,
-            comment: commentsForm.comment.value
-        }
+const saveComment = async commentsForm => {
+    let url = `./../../API/pages-service.php?save-comment`, 
+        comment = JSON.stringify({
+            rating: commentsForm.ratingValue.value,
+            pageId: getPageId(),
+            userId: getCookie('userId'),
+            commentText: commentsForm.commentText.value
+        }),
+        commentResult = await fetch(url, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(comment)
+        });
 
-    console.log(comment)
-
+    console.log(await commentResult.json());
+    console.log(commentResult)
 }
 
 const getPageId = () => {
@@ -133,18 +140,20 @@ const renderCommentContent = comment => {
 }
 
 const enableUsersRating = () => {
-    const ratingLabels = document.querySelectorAll('.rating label')
-
-    for (let i = 0; i < ratingLabels.length; i++) {
-        let label = ratingLabels[i]
-        console.log(label)
-        label.addEventListener('click', e => {
-            console.log(e.target)
-            const selectedRating = label.previousElementSibling.value
-            console.log('Valoración seleccionada:', selectedRating)
-        })
-    }
     d.addEventListener("click", e => {
-        console.log(e.target)
-    })
+        if (e.target.matches(".rating-star")) {
+            let ratingValueInput = d.querySelector(".rating-value"),
+                stars = d.querySelectorAll(".rating-star"),
+                starValue = e.target.getAttribute("value")
+            for (let i = 0; i < stars.length; i++) {
+                if (stars[i].classList.contains("active")) {
+                    stars[i].classList.remove("active")
+                }
+            }
+            for (let i = 1; i <= starValue; i++) {
+                stars[stars.length - i].classList.add("active")
+            }
+            ratingValueInput.value = starValue
+        }
+    })  
 }

@@ -2,19 +2,16 @@
     <h4>Deja aquí tu reseña</h4>
     <form class="form comments-form">
         <div class="rating form-group">
-            <input type="radio" name="rating-star" class="rating-star" value="5" />
-            <label for="star-5">&#9733;</label>
-            <input type="radio" name="rating-star" class="rating-star" value="4" />
-            <label for="star-4">&#9733;</label>
-            <input type="radio" name="rating-star" class="rating-star" value="3" />
-            <label for="star-3">&#9733;</label>
-            <input type="radio" name="rating-star" class="rating-star" value="2" />
-            <label for="star-2">&#9733;</label>
-            <input type="radio" name="rating-star" class="rating-star" value="1" />
-            <label for="star-1">&#9733;</label>
+            <span class="rating-star" value="5">★</span>
+            <span class="rating-star" value="4">★</span>
+            <span class="rating-star" value="3">★</span>
+            <span class="rating-star" value="2">★</span>
+            <span class="rating-star" value="1">★</span>
+
+            <input type="hidden" name="ratingValue" class="rating-value" value="">
         </div>
         <div class="form-group">
-            <textarea class="form-control comment-box" name="comment" placeholder="Escribe un comentario..."
+            <textarea class="form-control comment-box" name="commentText" placeholder="Escribe un comentario..."
                 aria-setsize="none" required></textarea>
         </div>
         <input type="submit" value="Enviar">

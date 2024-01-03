@@ -55,12 +55,7 @@ main {
     text-align: left;
 }
 
-.rating input {
-    display: none;
-}
-
-.rating label,
-.comment-card .star {
+.rating-star {
     display: inline-block;
     padding: 5px;
     font-size: 24px;
@@ -68,13 +63,7 @@ main {
     cursor: pointer;
 }
 
-.rating label:hover,
-.rating label:hover~label,
-.rating input:checked~label {
-    color: var(--color-primary);
-}
-
-.star.active {
+.rating-star.active {
     color: var(--color-primary);
 }
 

@@ -10,7 +10,14 @@ if (isset($_GET['get-page'])) {
     $pageContent = getPageContentFromPageId($pageId);
     echo json_encode($pageContent);
 } else if (isset($_GET['save-comment'])) {
-    saveComment($_POST, $pageId);
+    echo json_encode(saveComment());
+    if (saveComment()) {
+        http_response_code(200);
+        echo json_encode(array('responseCode' => 200, 'message' => 'Comentario enviado con éxito'));
+    } else {
+        http_response_code(400);
+        echo json_encode(array('responseCode' => 400, 'message' => 'El comentario no pudo ser enviado'));
+    }
 } else if (isset($_GET['get-comments'])) {
     if (isset($_GET['pageId'])) {
         $comments = getComments($_GET['pageId']);
@@ -19,16 +26,20 @@ if (isset($_GET['get-page'])) {
 }
 
 
-function saveComment($comment, $pageId)
-{
-    $userId = $_POST['userId'];
-    $rating = $_POST['rating'];
-    $comment = $_POST['comment'];
+function saveComment()
+{   
+    $json_data = file_get_contents("php://input");
+    $commentData = json_decode($json_data, true);
+    return $commentData;
+    $userId = $commentData['userId'];
+    $pageId = $commentData['pageId'];
+    $rating = $commentData['rating'];
+    $commentText = $commentData['commentText'];
 
     $connection = connect();
-    $insertQuery = "insert into reviews(userId, rating, comment, pageId) values(?, ?, ?, ?)";
+    $insertQuery = "insert into reviews(userId, rating, commentText, pageId) values(?, ?, ?, ?)";
     $statement = $connection->prepare($insertQuery);
-    $statement->bind_param("iisi", $userId, $rating, $comment, $pageId);
+    $statement->bind_param("iisi", $userId, $rating, $commentText, $pageId);
     $insertResult = $statement->execute();
     close($connection);
     return $insertResult;
