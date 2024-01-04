@@ -28,17 +28,14 @@ const saveComment = async commentsForm => {
             pageId: getPageId(),
             userId: getCookie('userId'),
             commentText: commentsForm.commentText.value
-        }),
-        commentResult = await fetch(url, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(comment)
-        });
+        })
+        try {
+            await fetchHandler(url, getRequestData("POST", comment))
+            window.location.href = `?pageId=${getPageId()}&comment-success=true`
+        } catch (error) {
+            d.querySelector('.comment-error').classList.remove('d-none')
+        }
 
-    console.log(await commentResult.json());
-    console.log(commentResult)
 }
 
 const getPageId = () => {
@@ -101,9 +98,9 @@ const renderArticleContent = articleElements => {
 }
 
 const handleCommentsSection = async pageId => {
-    let commentsSection = d.querySelector(".comments-container")
+    let commentsContainer = d.querySelector(".comments-container")
     if (getCookie("userId") !== null) {
-        await loadHtmlComponent("./comments.html", commentsSection)
+        await loadHtmlComponent("./comments.html", commentsContainer)
         enableUsersRating()
         await renderComments(pageId)
     } else {
@@ -112,28 +109,28 @@ const handleCommentsSection = async pageId => {
 }
 
 const renderComments = async pageId => {
-    let url = `./../../API/pages-service.php?get-page=${pageId}`,
+    let url = `./../../API/pages-service.php?get-comments&pageId=${pageId}`,
         comments = await fetchHandler(url)
 
     if (comments.length > 0) {
-        let commentsContainer = d.querySelector(".comments-container")
+        let commentsWindow = d.querySelector(".comments-window")
         for (let i = 0; i < comments.length; i++) {
             let comment = comments[i],
                 commentTemplate = d.querySelector(".comment-template"),
                 commentClone = d.importNode(commentTemplate.content, true)
-            commentsContainer.appendChild(commentClone)
+            commentsWindow.appendChild(commentClone)
             renderCommentContent(comment)
         }
     } else {
-        console.log("NO HAY COMENTARIOS")
+
     }
 }
 
 const renderCommentContent = comment => {
-    let commentHTML = d.querySelector(".comments-containert").lastElementChild
+    let commentHTML = d.querySelector(".comments-window").lastElementChild
     commentHTML.querySelector(".comment-author").textContent = `${comment.firstname} ${comment.lastname}`
     commentHTML.querySelector(".comment-text").textContent = comment.commentText
-    let commentStars = commentHTML.querySelectorAll(".comment-rating .star")
+    let commentStars = commentHTML.querySelectorAll(".comment-rating .rating-star")
     for (let i = 0; i < comment.rating; i++) {
         commentStars[i].classList.add("active")
     }
@@ -141,9 +138,9 @@ const renderCommentContent = comment => {
 
 const enableUsersRating = () => {
     d.addEventListener("click", e => {
-        if (e.target.matches(".rating-star")) {
+        if (e.target.matches(".rating .rating-star")) {
             let ratingValueInput = d.querySelector(".rating-value"),
-                stars = d.querySelectorAll(".rating-star"),
+                stars = d.querySelectorAll(".rating .rating-star"),
                 starValue = e.target.getAttribute("value")
             for (let i = 0; i < stars.length; i++) {
                 if (stars[i].classList.contains("active")) {

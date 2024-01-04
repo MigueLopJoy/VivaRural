@@ -30,12 +30,12 @@ const toggleAuthLayers = () => {
 
 const login = async loginForm => {
     let url = "./../API/auth-service.php?login",
-        userData = {
+        userData = JSON.stringify({
             email: loginForm.email.value,
             password: loginForm.password.value
-        }
+        })
     try {
-        let loginResult = await fetchHandler(url, getRequestData("POST", JSON.stringify(userData)))
+        let loginResult = await fetchHandler(url, getRequestData("POST", userData))
         document.cookie = 'userId=' + loginResult
         closeModal()
     } catch (error) {

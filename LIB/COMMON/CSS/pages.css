@@ -69,16 +69,13 @@ main {
 
 .comments-form textarea,
 .comments-form input[type="text"] {
-    width: 100%;
     padding: .5rem;
-    border: none;
     margin-bottom: .75rem;
+    border: none;
     outline: none;
 }
 
 .comment-card {
-    border: 1px solid #ccc;
-    border-radius: .5rem;
     overflow: hidden;
 }
 
