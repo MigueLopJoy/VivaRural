@@ -2,9 +2,9 @@
 
 function authenticateUser()
 {
-    $userId = authenticate($_POST);
-    if ($userId) {
-        $_SESSION["logged-admin"] = $userId;
+    $userData = authenticate($_POST);
+    if ($userData['userId'] & $userData['roleId'] === 1) {
+        $_SESSION["logged-admin"] = $userData['userId'];
         insertAdminAction(1);
         header("Location: ?");
     } else {
@@ -15,7 +15,9 @@ function authenticateUser()
 
 function registerUser()
 {
-    if (register($_POST)) {
+    $userData = $_POST;
+    $userData['roleId'] = 1;
+    if (register($userData)) {
         header("Location: ?registration-success=true");
         exit();
     }

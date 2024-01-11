@@ -10,7 +10,6 @@ if (isset($_GET['get-page'])) {
     $pageContent = getPageContentFromPageId($pageId);
     echo json_encode($pageContent);
 } else if (isset($_GET['save-comment'])) {
-    echo json_encode(saveComment());
     if (saveComment()) {
         http_response_code(200);
         echo json_encode(array('responseCode' => 200, 'message' => 'Comentario enviado con éxito'));
@@ -27,10 +26,10 @@ if (isset($_GET['get-page'])) {
 
 
 function saveComment()
-{   
+{
     $json_data = file_get_contents("php://input");
     $commentData = json_decode($json_data, true);
-    return $commentData;
+
     $userId = $commentData['userId'];
     $pageId = $commentData['pageId'];
     $rating = $commentData['rating'];
@@ -48,7 +47,7 @@ function saveComment()
 function getComments($pageId)
 {
     $sql = '
-        SELECT u.firstname, u.lastname, r.comment, r.rating 
+        SELECT u.firstname, u.lastname, r.commentText, r.rating 
         FROM reviews r
         INNER JOIN town_pages tp
         ON r.pageId = tp.pageId

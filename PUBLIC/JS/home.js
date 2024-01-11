@@ -9,6 +9,7 @@ d.addEventListener("DOMContentLoaded", async () => {
     await renderDestinations()
     await loadHtmlComponent("./HTML/auth.html", d.querySelector(".auth-container"))
     await loadHtmlComponent("./HTML/footer.html", d.querySelector("body"))
+    notifyRegistrationSuccess()
 })
 
 const renderDestinations = async () => {

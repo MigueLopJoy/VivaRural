@@ -1,5 +1,6 @@
 import { fetchHandler, getRequestData } from "./fetchHandler.js"
 import { getCookie, loadHtmlComponent } from "./utils.js"
+import { notifyRegistrationSuccess } from "./auth.js"
 
 const d = document,
     body = d.querySelector("body")
@@ -9,9 +10,10 @@ d.addEventListener("DOMContentLoaded", async e => {
         pageInfo = await getTownPageInfo(pageId)
     await renderBanner(pageInfo)
     await renderArticles(pageInfo)
-    await handleCommentsSection(pageId)
     await loadHtmlComponent("./auth.html", d.querySelector(".auth-container"))
+    await handleCommentsSection(pageId)
     await loadHtmlComponent("./footer.html", body)
+    notifyRegistrationSuccess()
 })
 
 d.addEventListener("submit", e => {
@@ -22,23 +24,20 @@ d.addEventListener("submit", e => {
 })
 
 const saveComment = async commentsForm => {
-    let url = `./../../API/pages-service.php?save-comment`, 
+    let url = `./../../API/pages-service.php?save-comment`,
         comment = JSON.stringify({
             rating: commentsForm.ratingValue.value,
             pageId: getPageId(),
             userId: getCookie('userId'),
             commentText: commentsForm.commentText.value
-        }),
-        commentResult = await fetch(url, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(comment)
-        });
+        })
+    try {
+        let commentResult = await fetchHandler(url, getRequestData("POST", comment))
+        if (commentResult) location.href = location.href
+    } catch (error) {
+        console.log(error)
+    }
 
-    console.log(await commentResult.json());
-    console.log(commentResult)
 }
 
 const getPageId = () => {
@@ -112,38 +111,41 @@ const handleCommentsSection = async pageId => {
 }
 
 const renderComments = async pageId => {
-    let url = `./../../API/pages-service.php?get-page=${pageId}`,
+    let url = `./../../API/pages-service.php?get-comments&pageId=${pageId}`,
         comments = await fetchHandler(url)
 
     if (comments.length > 0) {
-        let commentsContainer = d.querySelector(".comments-container")
+        let commentsWindow = d.querySelector(".comments-window")
         for (let i = 0; i < comments.length; i++) {
             let comment = comments[i],
                 commentTemplate = d.querySelector(".comment-template"),
                 commentClone = d.importNode(commentTemplate.content, true)
-            commentsContainer.appendChild(commentClone)
+            commentsWindow.appendChild(commentClone)
             renderCommentContent(comment)
         }
     } else {
-        console.log("NO HAY COMENTARIOS")
+        console.log("No hay comentarios")
     }
 }
 
 const renderCommentContent = comment => {
-    let commentHTML = d.querySelector(".comments-containert").lastElementChild
-    commentHTML.querySelector(".comment-author").textContent = `${comment.firstname} ${comment.lastname}`
-    commentHTML.querySelector(".comment-text").textContent = comment.commentText
-    let commentStars = commentHTML.querySelectorAll(".comment-rating .star")
-    for (let i = 0; i < comment.rating; i++) {
-        commentStars[i].classList.add("active")
+    let commentsWindow = d.querySelector(".comments-window")
+    if (commentsWindow) {
+        let commentHTML = d.querySelector(".comments-window").lastElementChild
+        commentHTML.querySelector(".comment-author").textContent = `${comment.firstname} ${comment.lastname}`
+        commentHTML.querySelector(".comment-text").textContent = comment.commentText
+        let commentStars = commentHTML.querySelectorAll(".comment-rating .rating-star")
+        for (let i = 0; i < comment.rating; i++) {
+            commentStars[i].classList.add("active")
+        }
     }
 }
 
 const enableUsersRating = () => {
     d.addEventListener("click", e => {
-        if (e.target.matches(".rating-star")) {
+        if (e.target.matches(".rating .rating-star")) {
             let ratingValueInput = d.querySelector(".rating-value"),
-                stars = d.querySelectorAll(".rating-star"),
+                stars = d.querySelectorAll(".rating .rating-star"),
                 starValue = e.target.getAttribute("value")
             for (let i = 0; i < stars.length; i++) {
                 if (stars[i].classList.contains("active")) {
@@ -155,5 +157,7 @@ const enableUsersRating = () => {
             }
             ratingValueInput.value = starValue
         }
-    })  
+    })
 }
+
+export { getPageId }

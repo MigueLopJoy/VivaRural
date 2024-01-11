@@ -27,6 +27,7 @@ function authenticateUser()
 function registerUser()
 {
     $userData = getInputData();
+    $userData['roleId'] = 1;
     if (register($userData)) {
         http_response_code(200);
         echo json_encode(array('responseCode' => 200, 'message' => 'Usuario registrado con éxito'));

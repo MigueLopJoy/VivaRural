@@ -48,6 +48,9 @@ if (!isset($_SESSION['logged-admin'])) {
         }
     } else {
         renderSideMenu();
+        if (isset($_GET['menu'])) {
+            renderMenuForms();
+        }
     }
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -56,12 +59,6 @@ if (!isset($_SESSION['logged-admin'])) {
         } else if (isset($_POST['search-town'])) {
             searchTownPage();
         }
-    }
-
-    if (isset($_GET['create-town'])) {
-        renderCreateTownLayer();
-    } else if (isset($_GET['search-town'])) {
-        renderSearchEngineLayer();
     }
 }
 renderPageBottom();
