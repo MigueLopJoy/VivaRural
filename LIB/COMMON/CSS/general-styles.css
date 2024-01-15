@@ -1,0 +1,137 @@
+/* GLOBAL STYLES BEGIN */
+
+:root {
+    --color-primary: #4CAF50;
+    --color-secondary: #8BC34A;
+    --color-text: #405200;
+    --color-background: #F5F5F5;
+    --color-accent: #87CEEB;
+    --color-rural: #8B4513;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('./../../FONTS/MONTSERRAT/Montserrat-VariableFont_wght.ttf') format('truetype');
+}
+
+*,
+*::after,
+*::before {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-color: #f4f4f4;
+    height: 100vh;
+}
+
+h2,
+h3,
+h4 {
+    color: var(--color-text);
+}
+
+ul {
+    list-style: none !important;
+}
+
+a,
+i {
+    cursor: pointer;
+    text-decoration: none !important;
+    color: var(--color-text) !important;
+}
+
+a:hover,
+i:hover::before,
+.btn-toggle:hover {
+    color: var(--color-secondary) !important;
+}
+
+a:active,
+i:active::before,
+.btn-toggle :active {
+    color: var(--color-primary) !important;
+}
+
+.d-none {
+    display: none !important;
+}
+
+.form select,
+.form option {
+    cursor: pointer;
+}
+
+/* GLOBAL STYLES END */
+
+
+/* FORMS BEGIN */
+
+.wrapper {
+    padding-top: 5rem;
+}
+
+.box-menu {
+    background-color: #f2f2f2;
+}
+
+.box-menu button {
+    border: none;
+    outline: none;
+}
+
+.box-menu .nav-link {
+    color: var(--color-text);
+    padding: 1rem 2rem;
+    cursor: pointer;
+}
+
+.box-menu .nav-link:hover {
+    background-color: #ccc;
+}
+
+.box-container h2 {
+    text-align: center;
+    margin-bottom: .75rem;
+}
+
+.form input,
+.form select {
+    width: 100%;
+    padding: .5rem;
+    border-radius: .25rem;
+    margin-bottom: 1rem;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    background-color: #f2f2f2;
+    outline: none;
+}
+
+/* FORMS END */
+
+/* SEND BUTTONS BEGIN */
+
+input[type="submit"],
+button {
+    background-color: var(--color-primary);
+    border: 1px solid var(--color-secondary);
+    border-radius: .25rem;
+    padding: .5rem 1.5rem;
+    color: #fff;
+}
+
+input[type="submit"]:hover,
+button:hover {
+    background-color: var(--color-secondary);
+}
+
+input[type="submit"]:active,
+button:active {
+    background-color: var(--color-primary);
+}
+
+/* SEND BUTTONS END */

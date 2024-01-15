@@ -1,0 +1,41 @@
+.btn-toggle {
+    border: none;
+    outline: none;
+}
+
+.btn-toggle::before {
+    content: '\25b6';
+    width: 1.25em;
+    line-height: 0;
+    transition: transform .35s ease;
+    transform-origin: 0.5em 50%;
+}
+
+.form input[type="file"] {
+    cursor: pointer;
+}
+
+.login-container p {
+    text-align: center;
+    margin-bottom: .5rem;
+}
+
+.logout-icon i::before {
+    font-size: 2rem;
+    color: #fff !important;
+}
+
+.close-table-container span {
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.close-table-container span:hover {
+    color: #ccc;
+}
+
+.close-table-container span:active {
+    color: #FF0000;
+}

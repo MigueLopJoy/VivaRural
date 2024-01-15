@@ -1,0 +1,156 @@
+/* EDITABLE CONTENT STYLES */
+
+.banner-img-container:hover {
+    transform: scaleY(1.1);
+    outline: 2px solid #222;
+}
+
+.page-article {
+    position: relative;
+}
+
+.page-article input {
+    border: none;
+    outline: none;
+    width: 100%;
+    height: 100%;
+}
+
+.page-title-container:hover,
+.page-article:hover,
+.page-article h2:hover,
+.page-article p:hover,
+.page-article img:hover {
+    padding: 1rem;
+    transform: scale(1.1);
+    outline: 2px solid #222;
+    background-color: #fff;
+}
+
+.page-title-container:hover {
+    background-color: #222;
+}
+
+.page-article img:hover,
+.banner-img-container:hover {
+    cursor: pointer;
+}
+
+.page-title-container:hover {
+    cursor: auto;
+}
+
+.page-article:hover .delete-article-btn,
+.page-article:hover .save-content-btn,
+.banner-img-container:hover .save-content-btn {
+    display: block;
+}
+
+.delete-article-btn {
+    position: absolute;
+    display: none;
+}
+
+.delete-article-btn span {
+    cursor: pointer;
+    color: #ff0000;
+}
+
+.delete-article-btn span:hover {
+    color: #ccc;
+}
+
+.delete-article-btn span:active {
+    color: #ff0000;
+}
+
+.template-1 .delete-article-btn {
+    top: 1rem;
+    right: 1rem;
+}
+
+.template-2 .delete-article-btn {
+    top: 1rem;
+    left: 1rem;
+}
+
+.save-content-btn {
+    position: absolute;
+    display: none;
+}
+
+.template-1 .save-content-btn,
+.banner-img-container .save-content-btn {
+    bottom: 1rem;
+    right: 1rem;
+}
+
+.template-2 .save-content-btn {
+    bottom: 1rem;
+    left: 1rem;
+}
+
+.page-title-container input {
+    background-color: transparent;
+    outline: none;
+    border: none;
+    color: #fff;
+}
+
+/* ADD NEW ELEMENTS BTN STYLES */
+
+.add-element-btn {
+    cursor: pointer;
+    background-color: #66ff66;
+    border: .75rem solid #aaffaa;
+    text-align: center;
+    color: #fff;
+}
+
+.add-element-btn:hover {
+    background-color: #88ff88;
+    border-color: #bbffbb;
+}
+
+.add-element-btn span {
+    color: #fff;
+    font-size: 1.5rem;
+    line-height: 36px;
+    margin: .25rem;
+}
+
+/* OFFCANVAS NEW ELEMENTS MENU STYLES */
+
+.elements-side-menu a {
+    color: #222;
+    text-decoration: none !important;
+}
+
+.elements-side-menu a:hover h4,
+.elements-side-menu a:hover p {
+    color: #666;
+}
+
+
+/* PAGE FOOTER */
+
+.skip-page-btn {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+}
+
+.skip-page-btn a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.skip-page-btn i {
+    font-size: 2.5rem;
+}
+
+.skip-page-btn i::before,
+.skip-page-btn p {
+    color: #ff0000 !important;
+}
