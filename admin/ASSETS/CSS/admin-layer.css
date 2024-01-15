@@ -24,3 +24,18 @@
     font-size: 2rem;
     color: #fff !important;
 }
+
+.close-table-container span {
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.close-table-container span:hover {
+    color: #ccc;
+}
+
+.close-table-container span:active {
+    color: #FF0000;
+}

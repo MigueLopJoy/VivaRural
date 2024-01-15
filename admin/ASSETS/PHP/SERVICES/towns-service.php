@@ -22,7 +22,7 @@ function getLastInsertedTownId()
     return getSingleSearchResult($sql);
 }
 
-function findTownByTownData($townData)
+function searchTown($townData)
 {
     $townInfo = null;
     if (isset($townData['townName'])) {
@@ -31,12 +31,50 @@ function findTownByTownData($townData)
     return $townInfo;
 }
 
-function findTownByTownName($townName)
+function findTownByTownName($townData)
 {
     $sql =
         '
         SELECT * FROM towns t
-        WHERE t.townName = "' . $townName . '";
+        WHERE
+    ';
+    if (isset($townData['townName'])) {
+        echo
+        '
+            t.townName = "' . $townData['townName'] . '";
+        AND
         ';
+    }
+    if (isset($townData['postalCode'])) {
+        echo
+        '
+            t.postalCode = "' . $townData['postalCode'] . '";
+        AND
+        ';
+    }
+    if (isset($townData['region'])) {
+        echo
+        '
+            t.region = "' . $townData['region'] . '";
+        AND
+        ';
+    }
+    if (isset($townData['province'])) {
+        echo
+        '
+            t.province = "' . $townData['province'] . '";
+        AND
+        ';
+    }
+    if (isset($townData['rating'])) {
+        echo
+        '
+                t.rating >= "' . $townData['minRating'] . '";
+            AND
+                t.rating >= "' . $townData['maxRating'] . '";
+            ';
+    }
+
+
     return getSingleSearchResult($sql);
 }

@@ -36,7 +36,7 @@ function renderLoginForm()
     echo
     '
         <div class="login-container">
-            <h2>Login</h2>
+            <h2 class="text-center">Login</h2>
         ';
 
     if (isset($_GET['registration-success']) && $_GET['registration-success'] === 'true') {
@@ -73,7 +73,7 @@ function renderRegisterForm()
     echo
     '
             <div class="register-container">
-                <h2>Register</h2>
+                <h2 class="text-center">Register</h2>
                 <form method="POST" class="form register-form">
                     <input type="text" name="firstname" placeholder="Firstname" required>
                     <input type="text" name="lastname" placeholder="Lastname" required>

@@ -61,6 +61,11 @@ i:active::before,
     display: none !important;
 }
 
+.form select,
+.form option {
+    cursor: pointer;
+}
+
 /* GLOBAL STYLES END */
 
 
@@ -94,7 +99,8 @@ i:active::before,
     margin-bottom: .75rem;
 }
 
-.form input {
+.form input,
+.form select {
     width: 100%;
     padding: .5rem;
     border-radius: .25rem;

@@ -9,6 +9,7 @@ include "./../LIB/COMMON/PHP/pages-service.php";
 include "./../LIB/COMMON/PHP/articles-service.php";
 include "./../LIB/COMMON/PHP/authentication-service.php";
 include "./ASSETS/PHP/SERVICES/auth-service.php";
+include "./ASSETS/PHP/SERVICES/users-service.php";
 include "./ASSETS/PHP/SERVICES/admin-service.php";
 include "./ASSETS/PHP/SERVICES/towns-service.php";
 include "./ASSETS/PHP/SERVICES/pages-service.php";
@@ -50,14 +51,20 @@ if (!isset($_SESSION['logged-admin'])) {
         renderSideMenu();
         if (isset($_GET['menu'])) {
             renderMenuForms();
+        } else if (isset($_GET['table'])) {
+            renderResultsTable();
         }
-    }
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        if (isset($_POST['create-town'])) {
-            createTownAndTownPage();
-        } else if (isset($_POST['search-town'])) {
-            searchTownPage();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if (isset($_POST['create-town'])) {
+                createTownAndTownPage();
+            } else if (isset($_POST['search-town'])) {
+                searchTown($_POST);
+            } else if (isset($_POST['create-user'])) {
+                createUser($_POST);
+            } else if (isset($_POST['search-user'])) {
+                searchUsers($_POST);
+            }
         }
     }
 }

@@ -29,7 +29,7 @@ function createTownAndTownPage()
 
 function searchTownPage()
 {
-    $townInfo = findTownByTownData($_POST);
+    $townInfo = searchTown($_POST);
     $townId = $townInfo['townid'];
     $pageId = (getPageIdFromTownId($townId))['pageId'];
     $_SESSION['pageId'] = $pageId;

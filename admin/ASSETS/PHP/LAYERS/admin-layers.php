@@ -11,41 +11,32 @@ function renderSideMenu()
                     </a>
                 </div>
                 <hr>
-                <ul class="nav nav-pills flex-column mb-auto">
-                    <li class="navaction-item">
-                        <button class="btn btn-toggle collapsed text-white" data-bs-toggle="collapse" data-bs-target=".destinations-collapse" aria-expanded="false">
-                            Destinos
-                        </button>
-                        <div class="collapse destinations-collapse">
-                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ps-3">
-                                <li><a href="?menu&object=destination&action=create" class="nav-link text-white">Crear destino</a></li>
-                                <li><a href="?menu&object=destination&action=search" class="nav-link text-white">Buscar destino</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <button class="btn btn-toggle collapsed text-white" data-bs-toggle="collapse" data-bs-target=".pages-collapse" aria-expanded="false">
-                            Páginas
-                        </button>
-                        <div class="collapse pages-collapse">
-                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ps-3">
-                                <li><a href="?menu&object=page&action=create" class="nav-link text-white">Crear página de destino</a></li>
-                                <li><a href="?menu&object=page&action=search" class="nav-link text-white">Buscar página de destino</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li>
-                        <button class="btn btn-toggle collapsed text-white" data-bs-toggle="collapse" data-bs-target=".users-collapse" aria-expanded="false">
-                            Usuarios  
-                        </button>
-                        <div class="collapse users-collapse">
-                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ps-3">
-                                <li><a href="?menu&object=user&action=create" class="nav-link text-white">Crear usuario</a></li>
-                                <li><a href="?menu&object=user&action=search" class="nav-link text-white">Buscar usuario</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
+                <div class="overflow-hidden">
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li class="navaction-item">
+                            <button class="btn btn-toggle collapsed text-white" data-bs-toggle="collapse" data-bs-target=".destinations-collapse" aria-expanded="false">
+                                Destinos
+                            </button>
+                            <div class="collapse destinations-collapse">
+                                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ps-3">
+                                    <li><a href="?menu&object=destination&action=create" class="nav-link text-white">Crear destino</a></li>
+                                    <li><a href="?menu&object=destination&action=search" class="nav-link text-white">Buscar destino</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <button class="btn btn-toggle collapsed text-white" data-bs-toggle="collapse" data-bs-target=".users-collapse" aria-expanded="false">
+                                Usuarios  
+                            </button>
+                            <div class="collapse users-collapse">
+                                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ps-3">
+                                    <li><a href="?menu&object=user&action=create" class="nav-link text-white">Crear usuario</a></li>
+                                    <li><a href="?menu&object=user&action=search" class="nav-link text-white">Buscar usuario</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
                 <hr>
                 <div class="logout-icon text-center">
                     <a href="?logout">
@@ -63,91 +54,174 @@ function renderSideMenu()
 function renderMenuForms()
 {
     $object = $_GET['object'];
-    $action = $_GET['action'];
     echo '
         <div class="wrapper w-50 m-auto">
             <div class="box m-auto position-relative shadow bg-white rounded p-5 pb-4">
         ';
-    call_user_func('render' . $action . $object . 'Form');
+    call_user_func('render' . $object . 'Form');
 }
 
-function renderCreateDestinationForm()
+function renderDestinationForm()
 {
     echo
     '
             <div class="create-town-container">
-                <form method="POST"  class="form search-form">
+                <form method="POST" action="?" class="form search-form">
                     <input type="text" name="townName" placeholder="Town Name">
                     <input type="text" name="region" placeholder="Region">
                     <input type="text" name="province" placeholder="Province">
                     <input type="text" name="postalCode" placeholder="Postal Code">
+    ';
+    if ($_GET['action'] === 'create') {
+        echo
+        '
                     <input type="file" name="thumbnail" accept="image/*">
-                    <input type="submit" name="create-town" value="Create">
+                    <input type="submit" name="create-town" value="Search">
+        ';
+    } else {
+        echo
+        '
+                    <div class="input-group">
+                        <div class="col-6 pe-1">
+                            <input type="text" name="minRating" placeholder="Min. Rating">
+                        </div>
+                        <div class="col-6 ps-1">
+                            <input type="text" name="maxRating" placeholder="Max Rating">
+                        </div>
+                    </div>        
+                    <input type="submit" name="search-town" value="Search">
+                    
+        ';
+    }
+    echo
+    '
                 </form>
             </div>
         </div>
     ';
 }
 
-function renderSearchDestinationForm()
+function renderUserForm()
 {
     echo
     '
-            <div class="search-destination-container">
-                <form method="POST" class="form search-form">
-                    <input type="text" name="townName" placeholder="Town Name">
-                    <input type="submit" name="search-destination" value="Search">
-                </form>
-            </div>
-        </div>
-        ';
-}
+        <div class="search-user-container">
+            <form method="POST" action="?" class="form search-form">
+                <input type="text" name="firstname" placeholder="Nombre">
+                <input type="text" name="lastname" placeholder="Apellidos">
+                <input type="text" name="email" placeholder="Email">
+                <input type="text" name="phoneNumber" placeholder="Número de teléfono">
+                <input type="text" name="userName" placeholder="Nombre de usuario">
+    ';
 
-function renderCreatePageForm()
-{
-}
-
-function renderSearchPagesForm()
-{
-    echo
-    '
-            <div class="search-page-container">
-                <form method="POST" class="form search-form">
-                    <input type="text" name="townName" placeholder="Town Name">
-                    <input type="submit" name="search-page" value="Search">
-                </form>
-            </div>
-        </div>
-        ';
-}
-
-function renderCreateUserForm()
-{
-}
-
-
-function renderSearchUserForm()
-{
-    echo
-    '
-            <div class="search-user-container">
-                <form method="POST" class="form search-form">
-                    <input type="text" name="townName" placeholder="Nombre">
-                    <input type="text" name="townName" placeholder="Apellidos">
-                    <input type="text" name="townName" placeholder="Email">
-                    <input type="text" name="townName" placeholder="Número de teléfono">
-                    <input type="text" name="townName" placeholder="Nombre de usuario">
-                    <div class="form-group">
-                        <div class="col-6">
-                            <input type="text" name="townName" placeholder="">
+    if ($_GET['action'] === 'search') {
+        echo
+        '
+                    <div class="input-group">
+                        <div class="col-6 pe-1">
+                            <input type="date" name="minBirthDate" placeholder="Fec. Nac. Min.">
                         </div>
-                        <div class="col-6">
-                            <input type="text" name="townName" placeholder="Town Name">
+                        <div class="col-6 ps-1">
+                            <input type="date" name="maxBirthDate" placeholder="Fec. Nac. Max">
                         </div>
                     </div>
-                    <input type="submit" name="search-user" value="Search">
+                    <div class="input-group">
+                        <div class="col-6 pe-1">
+                            <input type="date" name="minRegistrationDate" placeholder="Fec. Reg. Min.">
+                        </div>
+                        <div class="col-6 ps-1">
+                            <input type="date" name="maxRegistrationDate" placeholder="Fec. Reg. Max">
+                        </div>
+                    </div>
+        ';
+    } else {
+        echo
+        '
+                    <div class="input-group">
+                        <input type="date" name="birthDate">
+                    </div>
+        ';
+    }
+
+    echo
+    '
+                    <div class="input-group">
+                        <select name="roleId">
+                            <option value="" disabled selected>Elegir Rol</option>
+                            <option value="1">Administrador</option>
+                            <option value="2">Usuario</option>
+                        </select>
+                    </div>
+    ';
+
+    if ($_GET['action'] === 'search') {
+        echo
+        '
+                    <div class="form-group">
+                        <input type="submit" name="search-user" value="Search">
+                    </div>        
+        ';
+    } else {
+        echo
+        '
+                    <div class="form-group">
+                        <input type="submit" name="create-user" value="Create">
+                    </div>
+        ';
+    }
+    echo
+    '
                 </form>
             </div>
         </div>
-        ';
+    ';
+}
+
+function renderResultsTable()
+{
+    echo
+    '
+    <div class="wrapper px-5">
+        <div class="box m-auto position-relative shadow bg-white rounded p-5 pb-4">
+            <div class="close-table-container">
+                <span class="position-absolute"><a href="?">X</a></span>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+    ';
+
+    $sql = 'SHOW COLUMNS FROM ' . $_GET['table'] . ';';
+    $tHead = getMultipleSearchResult($sql);
+    foreach ($tHead as $th) {
+        if ($th['Field'] !== 'userid' && $th['Field'] !== 'password') {
+            echo
+            '
+                <th>
+                    ' . $th['Field'] . '
+                </th>
+            ';
+        }
+    }
+    echo
+    '
+                    </tr>
+                </thead>
+                <tbody>
+    ';
+
+    $data = json_decode(base64_decode($_GET['data']));
+    foreach ($data as $row) {
+        echo '<tr>';
+        foreach ($row as $field) {
+            echo '<td>' . $field . '</td>';
+        }
+        echo '</tr>';
+    }
+
+    echo
+    '
+                </tbody>
+            </table>
+   ';
 }
