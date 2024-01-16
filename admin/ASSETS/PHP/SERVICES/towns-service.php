@@ -34,7 +34,8 @@ function getTowns($townData)
 {
     $sql =
         '
-        SELECT * FROM towns t
+        SELECT townid as id, townName, postalCode, region, province, rating 
+        FROM towns t
         WHERE 1
     ';
     if (!empty($townData['townName'])) {
@@ -44,7 +45,7 @@ function getTowns($townData)
         $sql .= ' AND t.postalCode = "' . $townData['postalCode'] . '"';
     }
     if (!empty($townData['region'])) {
-        $sql .= ' AND t.region = "' . $townData['region'] .'"';
+        $sql .= ' AND t.region = "' . $townData['region'] . '"';
     }
     if (!empty($townData['province'])) {
         $sql .= ' AND t.province = "' . $townData['province'] . '"';

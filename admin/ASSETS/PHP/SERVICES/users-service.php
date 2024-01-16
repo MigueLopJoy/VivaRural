@@ -23,8 +23,10 @@ function searchUsers($userData)
 function getLastInsertedUser()
 {
     $sql = '
-        SELECT firstname, lastname, email, phoneNumber, userName, registrationDate, birthDate, roleId 
-        FROM users
+        SELECT u.userId as id, u.firstname, u.lastname, u.email, u.phoneNumber, u.userName, u.registrationDate, u.birthDate, r.roleName
+        FROM users u
+        INNER JOIN roles r
+        ON u.roleid = r.roleid
         WHERE userId = (
             SELECT MAX(userId) 
             FROM users
@@ -37,8 +39,9 @@ function getLastInsertedUser()
 function getUsers($userData)
 {
     $sql = '
-        SELECT userid, firstname, lastname, email, phoneNumber, userName, registrationDate, birthDate, roleId 
-        FROM users   
+        SELECT u.userId as id, u.firstname, u.lastname, u.email, u.phoneNumber, u.userName, u.registrationDate, u.birthDate, r.roleName
+        FROM users u
+        INNER JOIN roles r
         WHERE 1';
 
     if (!empty($userData['firstname'])) {
@@ -74,9 +77,10 @@ function getUsers($userData)
     return getMultipleSearchResult($sql);
 }
 
-function deleteUser($userData) {
+function deleteUser($userData)
+{
     $sql = '
-        DELETE FROM users WHERE userid = '. $userData['userId'] .';
+        DELETE FROM users WHERE userid = ' . $userData['userId'] . ';
     ';
     executeSql($sql);
     header('Location: ?');

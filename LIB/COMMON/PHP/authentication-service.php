@@ -28,7 +28,7 @@ function register($userData)
     $phoneNumber = $userData['phoneNumber'];
     $userName = $userData['userName'];
     $hashedPassword = password_hash($userData['password'], PASSWORD_BCRYPT);
-    $registrationDate = date("d-m-Y");
+    $registrationDate = date("Y-m-d");
     $birthDate = $userData['birthDate'];
     $roleId = $userData['roleId'];
 
