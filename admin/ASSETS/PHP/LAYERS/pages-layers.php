@@ -14,7 +14,7 @@ function renderPageEditor($pageInfo)
 
 function renderBanner($pageInfo)
 {
-    $banerImage = isset($pageInfo['bannerImage']) ? $pageInfo['bannerImage'] : 'example-banner.png';
+    $banerImage = !empty($pageInfo['bannerImage']) ? $pageInfo['bannerImage'] : 'example-banner.png';
     echo '
         <section class="page-section page-banner mb-5">
             <form action="?page-editor&edit-page" method="POST" enctype="multipart/form-data">
@@ -52,7 +52,7 @@ function renderArticles($articles)
         $articleElements = array();
         $continueExecution = true;
         foreach ($elements as $element) {
-            if (isset($element['elementReference'])) {
+            if (!empty($element['elementReference'])) {
                 switch ($element['elementReference']) {
                     case 'article-image':
                         $url = "./../LIB/MEDIA/IMGS/";
@@ -194,13 +194,13 @@ function renderOffCanvasMenu()
                 <div class="offcanvas-body">
                     <ul class="list-unstyled">
                         <li class="mb-3">
-                            <a href="?page-editor&handle-article&new-template=1">
+                            <a href="?page-editor&handle-article&new-template=1" class="text-dark">
                                 <h4 class="mb-0">Artículo 1</h4>
                                 <p>Imagen a la izquierda y texto a la derecha</p>
                             </a>
                         </li>
                         <li class="mb-3">
-                            <a href="?page-editor&handle-article&new-template=2">
+                            <a href="?page-editor&handle-article&new-template=2" class="text-dark">
                                 <h4 class="mb-0">Artículo 2</h4>
                                 <p>Texto a la izquierda e imagen a la derecha</p>
                             </a>

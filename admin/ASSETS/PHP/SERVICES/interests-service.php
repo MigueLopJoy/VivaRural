@@ -6,7 +6,7 @@ function createInterest($interestInfo)
     $connection = connect();
     $insertQuery = "insert into interests(interestName) values(?)";
     $statement = $connection->prepare($insertQuery);
-    $statement->bind_param("ssss", $interestName);
+    $statement->bind_param("s", $interestName);
     $insertResult = $statement->execute();
     close($connection);
     return $insertResult;

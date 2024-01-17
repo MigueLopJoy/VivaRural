@@ -221,6 +221,40 @@ function renderInterestsForm()
     ';
 }
 
+function renderAdmin_actionsForm()
+{
+    echo
+    '
+        <div class="actions-forms-container">
+            <form method="POST" action="?" class="form search-form">
+                <input type="text" name="adminEmail" placeholder="Admin email">
+                <input type="text" name="townName" placeholder="Nombre de localidad">
+                <select name="actionType">
+                    <option value="" disabled selected>Acción</option>
+                    <option value="login">Login</option>
+                    <option value="create-town">Create Town and Town Page</option>
+                    <option value="search-town">Search Town Page</option>
+                    <option value="edit-banner">Edit Banner</option>
+                    <option value="create-article">Create Article</option>
+                    <option value="edit-article">Edit Article</option>
+                    <option value="delete-article">Delete Article</option>
+                    <option value="logout">Logout</option>
+                </select>
+                <div class="input-group">
+                    <div class="col-6 pe-1">
+                        <input type="date" name="minDateTime">
+                    </div>
+                    <div class="col-6 ps-1">
+                        <input type="date" name="maxDateTime">
+                    </div>
+                </div>
+                <input type="submit" name="search-admin-actions" value="Buscar">
+            </form>
+        </div>
+    </div>
+    ';
+}
+
 function renderResultsTable()
 {
     echo
@@ -230,8 +264,8 @@ function renderResultsTable()
             <div class="close-table-container">
                 <span class="position-absolute"><a href="?">X</a></span>
             </div>
-            <table class="table">
-                <thead>
+            <table class="table table-bordered table-striped table-responsive">
+                <thead  >
                     <tr>
     ';
     renderTableHead();
@@ -251,7 +285,16 @@ function renderTableHead()
             echo '<th class="text-center">' . $th['Field'] . '</th>';
         }
     }
-    echo '<th class="text-center">Acción</th></tr></thead>';
+    if ($_GET['table'] === 'admin_actions') {
+        $additionalField = 'email';
+        echo 
+        '
+        <th class="text-center">Admin Email</th>
+        <th class="text-center">Town Name</th>
+        ';
+    } else {
+        echo '<th class="text-center">Acción</th></tr></thead>';
+    }
 }
 
 function renderTableBody()
@@ -264,7 +307,9 @@ function renderTableBody()
                 echo '<td class="text-center">' . $field . '</td>';
             }
         }
-        createActionBtns($row);
+        if ($_GET['table'] !== 'admin_actions') {
+            createActionBtns($row);
+        }
         echo '</tr>';
     }
     echo '</tbody>';

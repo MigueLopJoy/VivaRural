@@ -101,8 +101,10 @@ function handlePostRequests()
             deleteUser($_POST);
         } elseif (isset($_POST['create-interest'])) {
             createInterest($_POST);
-        } elseif (isset($_POST['search-interest'])) {
+        } else if (isset($_POST['search-interest'])) {
             searchInterest($_POST);
+        } else if (isset($_POST['search-admin-actions'])) {
+            searchAdminActions($_POST);
         }
     }
 }
