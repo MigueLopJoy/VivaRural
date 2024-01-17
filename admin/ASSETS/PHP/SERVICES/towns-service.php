@@ -34,7 +34,7 @@ function getTowns($townData)
 {
     $sql =
         '
-        SELECT townid as id, townName, postalCode, region, province, rating 
+        SELECT *
         FROM towns t
         WHERE 1
     ';

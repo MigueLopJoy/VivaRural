@@ -12,23 +12,15 @@ function createInterest($interestInfo)
     return $insertResult;
 }
 
-function searchInterest($interestData)
-{
-    $interests = getInterests($interestData);
-    $serializedData = base64_encode(json_encode($interests));
-    $url = '?table=interests&data=' . $serializedData;
-    header('Location: ' . $url);
-}
-
 function getInterests($interestData)
 {
     $sql = '
-    SELECT interestId as id, interestName
-    FROM interests r
-    WHERE 1
+        SELECT *
+        FROM interests
+        WHERE 1
     ';
-    if (!empty($interestData['interestName'])) {
-        $sql .= ' AND r.interestName = "' . $interestData['interestName'] . '"';
+    if (isset($interestData) && !empty($interestData['interestName'])) {
+        $sql .= ' AND interestName = "' . $interestData['interestName'] . '"';
     }
     $sql .= ';';
     return getMultipleSearchResult($sql);

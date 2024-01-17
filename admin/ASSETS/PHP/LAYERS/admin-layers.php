@@ -26,26 +26,12 @@ function renderSideMenu()
     ';
 
     foreach ($tables as $table) {
-        $tableName = $table['Tables_in_vivarural'];
-        if (array_key_exists($tableName, $tableTranslations)) {
+        $table = $table['Tables_in_vivarural'];
+        if (array_key_exists($table, $tableTranslations)) {
             echo
             '
             <li>
-                <button class="btn btn-toggle collapsed text-white" data-bs-toggle="collapse" data-bs-target=".' . $tableName . '-collapse" aria-expanded="false">
-                    ' . $tableTranslations[$tableName] . '
-                </button>
-                <div class="collapse ' . $tableName . '-collapse">
-                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ps-3">
-            ';
-
-            if ($tableName !== 'admin_actions') {
-                echo '<li><a href="?menu&table=' . $tableName . '&action=create" class="nav-link text-white">Crear ' . $tableTranslations[$tableName] . '</a></li>';
-            }
-
-            echo '
-                        <li><a href="?menu&table=' . $tableName . '&action=search" class="nav-link text-white">Buscar ' . $tableTranslations[$tableName] . '</a></li>
-                    </ul>
-                </div>
+                <a class="nav-link text-white" href="?table=' . $table . '&action=search">' . $tableTranslations[$table] . '</a>
             </li>
             ';
         }
@@ -116,12 +102,7 @@ function renderTownsForm()
                     
         ';
     }
-    echo
-    '
-            </form>
-        </div>
-    </div>
-    ';
+    echo '</form></div></div>';
 }
 
 function renderUsersForm()
@@ -192,33 +173,23 @@ function renderUsersForm()
         </div>
         ';
     }
-    echo
-    '
-            </form>
-        </div>
-    </div>
-    ';
+    echo '</form></div></div>';
 }
 
 function renderInterestsForm()
 {
-    echo
-    '
-    <div class="interest-forms-container">
-        <form method="POST" action="?" class="form search-form">
-            <input type="text" name="interestName" placeholder="Interés">
+    echo '<div class="interest-forms-container">';
+    $action = ($_GET['form'] === 'create') ? 'create' : 'search';
+    echo '
+        <form method="POST" action="?table=' . $_GET['table'] . '&action=' . $action . '" class="form search-form">
+        <input type="text" name="interestName" placeholder="Interés">
     ';
-    if ($_GET['action'] === 'create') {
-        echo '<input type="submit" name="create-interest" value="Crear">';
+    if ($action === 'create') {
+        echo '<input type="submit" value="Crear">';
     } else {
-        echo '<input type="submit" name="search-interest" value="Buscar">';
+        echo '<input type="submit" value="Buscar">';
     }
-    echo
-    '
-            </form>
-        </div>
-    </div>
-    ';
+    echo '</form></div></div>';
 }
 
 function renderAdmin_actionsForm()
@@ -261,11 +232,15 @@ function renderResultsTable()
     '
     <div class="wrapper h-75 px-5">
         <div class="box m-auto position-relative shadow bg-white rounded p-5 pb-4 h-100 overflow-auto">
+            <div class="d-inline-block add-elemebt-container mb-3">
+                <a href="?table=' . $_GET['table'] . '&form=create"
+                    class="bg-success d-flex align-items-center justify-content-center text-white rounded fs-2 px-3 py-1">+</a>
+            </div>
             <div class="close-table-container">
                 <span class="position-absolute"><a href="?">X</a></span>
             </div>
             <table class="table table-bordered table-striped table-responsive">
-                <thead  >
+                <thead>
                     <tr>
     ';
     renderTableHead();
@@ -276,23 +251,13 @@ function renderResultsTable()
 
 function renderTableHead()
 {
-    $sql = 'SHOW COLUMNS FROM ' . $_GET['table'] . ';';
-    $tHead = getMultipleSearchResult($sql);
-    foreach ($tHead as $th) {
-        if ((!stripos($th['Field'], 'id') || (stripos($th['Field'], 'id') && $th['Field'] === 'roleid'))
-            && $th['Field'] !== 'password'
-        ) {
+    $tableFields = getTableFields();
+    foreach ($tableFields as $th) {
+        if ($th['Field'] !== 'id' && $th['Field'] !== 'password') {
             echo '<th class="text-center">' . $th['Field'] . '</th>';
         }
     }
-    if ($_GET['table'] === 'admin_actions') {
-        $additionalField = 'email';
-        echo 
-        '
-        <th class="text-center">Admin Email</th>
-        <th class="text-center">Town Name</th>
-        ';
-    } else {
+    if ($_GET['table'] !== 'admin_actions') {
         echo '<th class="text-center">Acción</th></tr></thead>';
     }
 }
@@ -308,29 +273,27 @@ function renderTableBody()
             }
         }
         if ($_GET['table'] !== 'admin_actions') {
-            createActionBtns($row);
+            createActionBtns($row->id);
         }
         echo '</tr>';
     }
     echo '</tbody>';
 }
 
-function createActionBtns($row)
+function createActionBtns($id)
 {
     echo
     '
     <td class="d-flex justify-content-center">
         <div class="col-6 text-center">
-            <form action="?" method="post">
-                <input type="hidden" name="id" value="' . $row->id . '">
-                <button type="submit" name="delete-' . $_GET['table'] . '" class="btn btn-danger">Eliminar</button>
-            </form>
+            <button class="btn btn-danger" type="button">
+                <a href="?table=' . $_GET['table'] . '&action=delete&id=' . $id . '" class="text-white">Eliminar</a>
+            </button>
         </div>
         <div class="col-6 text-center">
-            <form action="?" method="post">
-                <input type="hidden" name="id" value="' . $row->id . '">
-                <button type="submit" name="edit-' . $_GET['table'] . '" class="btn btn-success">Editar</button>
-            </form>
+            <button class="btn btn-success" type="button">
+                <a href="?table=' . $_GET['table'] . '&action=edit&id=' . $id . '" class="text-white">Editar</a>
+            </button>
         </div>
     </td>
     ';

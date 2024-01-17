@@ -21,53 +21,14 @@ function logout()
     header("Location: ?");
 }
 
-function searchAdminActions($userData) 
-{
-    $actions = getActions($userData);
-    $serializedData = base64_encode(json_encode($actions));
-    $url = '?table=admin_actions&data=' . $serializedData;
-    header('Location: ' . $url);
-}
-
-// function getActions($actionData)
-// {
-//     $sql = '
-//         SELECT a.actionid as id, a.actionType, a.dateTime, u.email, t.townName
-//         FROM admin_actions a
-//         INNER JOIN users u
-//         ON a.adminid = u.userid
-//         LEFT JOIN town_pages tp
-//         ON a.pageid = tp.pageid
-//         INNER JOIN towns t
-//         ON tp.townid = t.townid
-//     ';
-//     $sql .= ' WHERE 1';
-//     if (!empty($actionData['adminEmail'])) {
-//         $sql .= " AND u.email = '" . $actionData['adminEmail'] . "'";
-//     }
-//     if (!empty($actionData['actionType'])) {
-//         $sql .= " AND actionType = '" . $actionData['actionType'] . "'";
-//     }
-//     if (!empty($actionData['townName'])) {
-//         $sql .= " AND t.townName = '" . $actionData['townName'] . "'";
-//     }
-//     if (!empty($actionData['minDateTime'])) {
-//         $sql .= " AND a.dateTime >= '" . $actionData['minDateTime'] . "'";
-//     }
-//     if (!empty($actionData['maxDateTime'])) {
-//         $sql .= " AND a.dateTime <= '" . $actionData['maxDateTime'] . "'";
-//     }
-//     $sql .= ';';
-//     return getMultipleSearchResult($sql);
-// }
-function getActions($actionData)
+function getadmin_actions($actionData)
 {
     $sql = '
-        SELECT a.actionid as id, a.actionType, a.dateTime, u.email, t.townName
+        SELECT a.id, u.email, a.actionType, t.townName, a.article, a.dateTime
         FROM admin_actions a
-        INNER JOIN users u ON a.adminid = u.userid
-        LEFT JOIN town_pages tp ON a.pageid = tp.pageid
-        LEFT JOIN towns t ON tp.townid = t.townid
+        INNER JOIN users u ON a.admin = u.id
+        LEFT JOIN town_pages tp ON a.page = tp.id
+        LEFT JOIN towns t ON tp.town = t.id
     ';
     $sql .= ' WHERE 1';
 
@@ -86,11 +47,7 @@ function getActions($actionData)
     if (!empty($actionData['maxDateTime'])) {
         $sql .= " AND a.dateTime <= '" . $actionData['maxDateTime'] . "'";
     }
-
     $sql .= ';';
-
-    echo $sql;
-    exit();
     return getMultipleSearchResult($sql);
 }
 

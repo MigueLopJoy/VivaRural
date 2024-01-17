@@ -10,6 +10,7 @@ include "./../LIB/COMMON/PHP/pages-service.php";
 include "./../LIB/COMMON/PHP/articles-service.php";
 include "./../LIB/COMMON/PHP/authentication-service.php";
 
+include "./ASSETS/PHP/SERVICES/CRUD.php";
 include "./ASSETS/PHP/SERVICES/auth-service.php";
 include "./ASSETS/PHP/SERVICES/users-service.php";
 include "./ASSETS/PHP/SERVICES/admin-service.php";
@@ -20,11 +21,6 @@ include "./ASSETS/PHP/SERVICES/interests-service.php";
 
 session_start();
 renderHeader();
-
-if (isset($_GET['logout'])) {
-    logout();
-}
-
 if (!isset($_SESSION['logged-admin'])) {
     handleNonAdmin();
 } else {
@@ -47,19 +43,50 @@ function handleNonAdmin()
 
 function handleAdmin()
 {
+    if (isset($_GET['logout'])) {
+        logout();
+    }
+
+    if (isset($_GET['page-editor'])) {
+
+    } else {
+        renderSideMenu();
+    }
+
+    if (isset($_GET['action'])) {
+        handleCrudActions();
+    } else {
+        if (isset($_GET['table'])) {
+            if (isset($_GET['form'])) {
+                renderMenuForms();
+            } else {
+                renderResultsTable();
+            }
+        } 
+    }
+
     if (isset($_GET['page-editor'])) {
         handlePageEditor();
     } else {
         ob_start();
-        renderSideMenu();
-        if (isset($_GET['menu'])) {
-            renderMenuForms();
-        } else if (!isset($_GET['menu']) && isset($_GET['table'])) {
-            renderResultsTable();
-        }
-
-        handlePostRequests();
         ob_end_flush();
+    }
+}
+
+function handleCrudActions() {
+    switch ($_GET['action']) {
+        case 'create':
+            createRegister($_POST);
+            break;
+        case 'search':
+            searchRegisters();
+            break;
+        case 'update':
+            updateRegister();
+            break;   
+        case 'delete':
+            deleteRegister();
+            break;  
     }
 }
 
@@ -82,29 +109,5 @@ function handleArticle()
         editArticle();
     } elseif (isset($_GET['delete-article'])) {
         handleArticleDeletion();
-    }
-}
-
-function handlePostRequests()
-{
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        if (isset($_POST['create-town'])) {
-            createTown($_POST);
-            createTownPage();
-        } elseif (isset($_POST['search-town'])) {
-            searchTown($_POST);
-        } elseif (isset($_POST['create-user'])) {
-            createUser($_POST);
-        } elseif (isset($_POST['search-user'])) {
-            searchUsers($_POST);
-        } elseif (isset($_POST['delete-user'])) {
-            deleteUser($_POST);
-        } elseif (isset($_POST['create-interest'])) {
-            createInterest($_POST);
-        } else if (isset($_POST['search-interest'])) {
-            searchInterest($_POST);
-        } else if (isset($_POST['search-admin-actions'])) {
-            searchAdminActions($_POST);
-        }
     }
 }

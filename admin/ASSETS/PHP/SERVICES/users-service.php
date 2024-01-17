@@ -23,7 +23,7 @@ function searchUsers($userData)
 function getLastInsertedUser()
 {
     $sql = '
-        SELECT u.userId as id, u.firstname, u.lastname, u.email, u.phoneNumber, u.userName, u.registrationDate, u.birthDate, r.roleName
+        SELECT u.id, u.firstname, u.lastname, u.email, u.phoneNumber, u.userName, u.registrationDate, u.birthDate, r.roleName
         FROM users u
         INNER JOIN roles r
         ON u.roleid = r.roleid
@@ -39,9 +39,10 @@ function getLastInsertedUser()
 function getUsers($userData)
 {
     $sql = '
-        SELECT u.userId as id, u.firstname, u.lastname, u.email, u.phoneNumber, u.userName, u.registrationDate, u.birthDate, r.roleName
+        SELECT u.id, u.firstname, u.lastname, u.email, u.phoneNumber, u.userName, u.registrationDate, u.birthDate, r.roleName
         FROM users u
         INNER JOIN roles r
+        ON u.id = r.id
         WHERE 1';
 
     if (!empty($userData['firstname'])) {
@@ -72,7 +73,7 @@ function getUsers($userData)
         $sql .= " AND birthDate <= '" . $userData['maxBirthDate'] . "'";
     }
     if (!empty($userData['roleId'])) {
-        $sql .= " AND roleId = '" . $userData['roleId'] . "'";
+        $sql .= " AND id = '" . $userData['roleId'] . "'";
     }
     return getMultipleSearchResult($sql);
 }
