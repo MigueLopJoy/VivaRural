@@ -67,12 +67,9 @@ function getActions($actionData)
         FROM admin_actions a
         INNER JOIN users u ON a.adminid = u.userid
         LEFT JOIN town_pages tp ON a.pageid = tp.pageid
-        INNER JOIN towns t ON tp.townid = t.townid
+        LEFT JOIN towns t ON tp.townid = t.townid
     ';
     $sql .= ' WHERE 1';
-
-    // Modify the condition to include both NULL and NOT NULL values
-    $sql .= " AND (tp.pageid IS NULL OR tp.pageid IS NOT NULL)";
 
     if (!empty($actionData['adminEmail'])) {
         $sql .= " AND u.email = '" . $actionData['adminEmail'] . "'";
