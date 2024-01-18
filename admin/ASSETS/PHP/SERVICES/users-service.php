@@ -39,10 +39,10 @@ function getLastInsertedUser()
 function getUsers($userData)
 {
     $sql = '
-        SELECT u.id, u.firstname, u.lastname, u.email, u.phoneNumber, u.userName, u.registrationDate, u.birthDate, r.roleName
+        SELECT u.id, u.firstname, u.lastname, u.email, u.phoneNumber, u.userName, u.registrationDate, u.birthDate, r.name
         FROM users u
         INNER JOIN roles r
-        ON u.id = r.id
+        ON u.role = r.id
         WHERE 1';
 
     if (!empty($userData['firstname'])) {

@@ -1,21 +1,5 @@
 <?php
 
-function createTown($townInfo)
-{
-    $townName = $townInfo['townName'];
-    $region = $townInfo['region'];
-    $province = $townInfo['province'];
-    $postalCode = $townInfo['postalCode'];
-
-    $connection = connect();
-    $insertQuery = "insert into towns(townName, region, province, postalCode) values(?, ?, ?, ?)";
-    $statement = $connection->prepare($insertQuery);
-    $statement->bind_param("ssss", $townName, $region, $province, $postalCode);
-    $insertResult = $statement->execute();
-    close($connection);
-    return $insertResult;
-}
-
 function getLastInsertedTownId()
 {
     $sql = 'SELECT MAX(townId) as townId FROM towns;';

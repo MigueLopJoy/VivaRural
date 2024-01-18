@@ -72,24 +72,22 @@ function renderMenuForms()
 
 function renderTownsForm()
 {
-    echo
-    '
+    $action = ($_GET['form'] === 'create') ? 'create' : 'search';
+    echo '
     <div class="towns-forms-container">
-        <form method="POST" action="?" class="form search-form">
-            <input type="text" name="townName" placeholder="Town Name">
+        <form method="POST" action="?table=' . $_GET['table'] . '&action=' . $action . '" class="form">
+            <input type="text" name="name" placeholder="Town Name">
             <input type="text" name="region" placeholder="Region">
             <input type="text" name="province" placeholder="Province">
             <input type="text" name="postalCode" placeholder="Postal Code">
     ';
-    if ($_GET['action'] === 'create') {
-        echo
-        '
+    if ($_GET['form'] === 'create') {
+        echo '
         <input type="file" name="thumbnail" accept="image/*">
         <input type="submit" name="create-town" value="Crear">
         ';
     } else {
-        echo
-        '
+        echo '
         <div class="input-group">
             <div class="col-6 pe-1">
                 <input type="text" name="minRating" placeholder="Min. Rating">
@@ -107,20 +105,20 @@ function renderTownsForm()
 
 function renderUsersForm()
 {
-    echo
-    '
+    $action = ($_GET['form'] === 'create') ? 'create' : 'search';
+    echo '
     <div class="users-forms-container">
-        <form method="POST" action="?" class="form search-form">
+        <form method="POST" action="?table=' . $_GET['table'] . '&action=' . $action . '" class="form">
             <input type="text" name="firstname" placeholder="Nombre">
             <input type="text" name="lastname" placeholder="Apellidos">
             <input type="text" name="email" placeholder="Email">
+            <input type="hidden" name="password" value="1234">
             <input type="text" name="phoneNumber" placeholder="Número de teléfono">
-            <input type="text" name="userName" placeholder="Nombre de usuario">
+            <input type="text" name="username" placeholder="Nombre de usuario">
     ';
 
-    if ($_GET['action'] === 'search') {
-        echo
-        '
+    if ($_GET['form'] === 'search') {
+        echo '
         <div class="input-group">
             <div class="col-6 pe-1">
                 <input type="date" name="minBirthDate" placeholder="Fec. Nac. Min.">
@@ -139,37 +137,32 @@ function renderUsersForm()
         </div>
         ';
     } else {
-        echo
-        '
+        echo '
         <div class="input-group">
             <input type="date" name="birthDate">
         </div>
         ';
     }
-
-    echo
-    '
+    echo '
+    <input type="hidden" name="registrationDate" value="' . date("Y-m-d") . '">
     <div class="input-group">
-        <select name="roleId">
+        <select name="role">
             <option value="" disabled selected>Elegir Rol</option>
             <option value="1">Administrador</option>
             <option value="2">Usuario</option>
         </select>
     </div>
     ';
-
-    if ($_GET['action'] === 'search') {
-        echo
-        '
+    if ($_GET['form'] === 'search') {
+        echo '
         <div class="form-group">
-            <input type="submit" name="search-user" value="Buscar">
+            <input type="submit" value="Buscar">
         </div>        
         ';
     } else {
-        echo
-        '
+        echo '
         <div class="form-group">
-            <input type="submit" name="create-user" value="Crear">
+            <input type="submit" value="Crear">
         </div>
         ';
     }
@@ -178,11 +171,14 @@ function renderUsersForm()
 
 function renderInterestsForm()
 {
-    echo '<div class="interest-forms-container">';
     $action = ($_GET['form'] === 'create') ? 'create' : 'search';
     echo '
-        <form method="POST" action="?table=' . $_GET['table'] . '&action=' . $action . '" class="form search-form">
-        <input type="text" name="interestName" placeholder="Interés">
+        <div class="interest-forms-container">
+            <div class="form-title text-center mb-3">
+                <h2>Buscar Interés</h2>
+            </div>   
+            <form method="POST" action="?table=' . $_GET['table'] . '&action=' . $action . '" class="form">
+                <input type="text" name="name" placeholder="Interés">
     ';
     if ($action === 'create') {
         echo '<input type="submit" value="Crear">';
@@ -197,10 +193,13 @@ function renderAdmin_actionsForm()
     echo
     '
         <div class="actions-forms-container">
-            <form method="POST" action="?" class="form search-form">
-                <input type="text" name="adminEmail" placeholder="Admin email">
-                <input type="text" name="townName" placeholder="Nombre de localidad">
-                <select name="actionType">
+            <div class="form-title text-center mb-3">
+                <h2>Buscar Acción de Administrador</h2>
+            </div>   
+            <form method="POST" action="?table=' . $_GET['table'] . '&action=search" class="form">
+                <input type="text" name="adminEma" placeholder="Admin email">
+                <input type="text" name="town" placeholder="Nombre de localidad">
+                <select name="action">
                     <option value="" disabled selected>Acción</option>
                     <option value="login">Login</option>
                     <option value="create-town">Create Town and Town Page</option>
@@ -219,7 +218,7 @@ function renderAdmin_actionsForm()
                         <input type="date" name="maxDateTime">
                     </div>
                 </div>
-                <input type="submit" name="search-admin-actions" value="Buscar">
+                <input type="submit" value="Buscar">
             </form>
         </div>
     </div>
@@ -228,29 +227,60 @@ function renderAdmin_actionsForm()
 
 function renderResultsTable()
 {
-    echo
-    '
-    <div class="wrapper h-75 px-5">
-        <div class="box m-auto position-relative shadow bg-white rounded p-5 pb-4 h-100 overflow-auto">
-            <div class="d-inline-block add-elemebt-container mb-3">
-                <a href="?table=' . $_GET['table'] . '&form=create"
-                    class="bg-success d-flex align-items-center justify-content-center text-white rounded fs-2 px-3 py-1">+</a>
-            </div>
-            <div class="close-table-container">
-                <span class="position-absolute"><a href="?">X</a></span>
-            </div>
-            <table class="table table-bordered table-striped table-responsive">
-                <thead>
-                    <tr>
+    echo '
+    <div class="wrapper h-100 px-5">
+        <div class="box m-auto position-relative shadow bg-white rounded p-5 py-4 h-75">
     ';
-    renderTableHead();
-    echo '<tbody>';
-    renderTableBody();
-    echo '</tbody></table></div></div>';
+    renderActionResultMessage();
+    renderTableBtns();
+    if ($_GET['data'] !== 'W10=') {
+        renderTableHead();
+        renderTableBody();
+    } else {
+        echo '
+        <div class="result-message-container text-center">
+            <p class="text-danger fs-5 mb-1">No se encontraron resultados de búsqueda</p>
+        </div>
+        ';
+    }
+    echo '</div></div>';
+}
+
+function renderTableBtns()
+{
+    echo '<div class="results-btns-container">';
+    if ($_GET['table'] !== 'admin_actions') {
+        echo '
+            <div class="d-inline-block add-btn-container mb-3">
+                <a href="?table=' . $_GET['table'] . '&form=create"
+                    class="custom-btn d-flex align-items-center justify-content-center border rounded fs-3 px-3 py-1">
+                        <i class="bi bi-plus-circle"></i>
+                </a>
+            </div>
+        ';
+    }
+    echo '
+                <div class="d-inline-block search-btn-container mb-3">
+                    <a href="?table=' . $_GET['table'] . '&form=search"
+                        class="custom   -btn d-flex align-items-center justify-content-center border rounded fs-3 px-3 py-1">
+                            <i class="bi bi-search"></i>
+                    </a>
+                </div>
+                <div class="close-table-container d-inline-block border rounded float-end">
+                    <a href="?" class="fs-3 px-3 py-1">X</a>
+                </div>
+            </div>
+    ';
 }
 
 function renderTableHead()
 {
+    echo '
+    <div class="table-container h-75 overflow-auto">
+        <table class="table table-bordered table-striped table-responsive">
+            <thead>
+                <tr>
+    ';
     $tableFields = getTableFields();
     foreach ($tableFields as $th) {
         if ($th['Field'] !== 'id' && $th['Field'] !== 'password') {
@@ -264,6 +294,7 @@ function renderTableHead()
 
 function renderTableBody()
 {
+    echo '<tbody>';
     $data = json_decode(base64_decode($_GET['data']));
     foreach ($data as $row) {
         echo '<tr>';
@@ -277,7 +308,7 @@ function renderTableBody()
         }
         echo '</tr>';
     }
-    echo '</tbody>';
+    echo '</tbody></table></div>';
 }
 
 function createActionBtns($id)
@@ -285,16 +316,52 @@ function createActionBtns($id)
     echo
     '
     <td class="d-flex justify-content-center">
-        <div class="col-6 text-center">
+        <div class="col-6 text-center me-1">
             <button class="btn btn-danger" type="button">
                 <a href="?table=' . $_GET['table'] . '&action=delete&id=' . $id . '" class="text-white">Eliminar</a>
             </button>
         </div>
-        <div class="col-6 text-center">
+        <div class="col-6 text-center ms-1">
             <button class="btn btn-success" type="button">
                 <a href="?table=' . $_GET['table'] . '&action=edit&id=' . $id . '" class="text-white">Editar</a>
             </button>
         </div>
     </td>
+    ';
+}
+
+function renderActionResultMessage()
+{
+    $message = '';
+    $color = '';
+    if (isset($_GET['operation']) && $_GET['operation'] === 'edit') {
+        if (isset($_GET['result']) && $_GET['result'] === 'success') {
+            $message = 'Registro editado con éxito';
+            $color = 'text-success';
+        } else if (isset($_GET['result']) && $_GET['result'] === 'error') {
+            $message = 'Error al editar el registro';
+            $color = 'text-danger';
+        }
+    } else if (isset($_GET['operation']) && $_GET['operation'] === 'delete') {
+        if (isset($_GET['result']) && $_GET['result'] === 'success') {
+            $color = 'text-success';
+            $message = 'Registro eliminado con éxito';
+        } else if (isset($_GET['result']) && $_GET['result'] === 'error') {
+            $message = 'Error al eliminar el registro';
+            $color = 'text-danger';
+        }
+    } else if (isset($_GET['operation']) && $_GET['operation'] === 'create') {
+        if (isset($_GET['result']) && $_GET['result'] === 'success') {
+            $color = 'text-success';
+            $message = 'Registro creado con éxito';
+        } else if (isset($_GET['result']) && $_GET['result'] === 'error') {
+            $message = 'Error al crear el registro';
+            $color = 'text-danger';
+        }
+    }
+    echo '
+        <div class="result-message-container text-center">
+            <p class="' . $color . ' fs-5 mb-1">' . $message . '</p>
+        </div>
     ';
 }

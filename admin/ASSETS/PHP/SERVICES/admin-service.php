@@ -24,22 +24,24 @@ function logout()
 function getadmin_actions($actionData)
 {
     $sql = '
-        SELECT a.id, u.email, a.actionType, t.townName, a.article, a.dateTime
+        SELECT a.id, u.email, a.action, t.name, a.article, a.dateTime
         FROM admin_actions a
         INNER JOIN users u ON a.admin = u.id
         LEFT JOIN town_pages tp ON a.page = tp.id
         LEFT JOIN towns t ON tp.town = t.id
     ';
     $sql .= ' WHERE 1';
-
-    if (!empty($actionData['adminEmail'])) {
-        $sql .= " AND u.email = '" . $actionData['adminEmail'] . "'";
+    if (isset($_GET['id'])) {
+        $sql .= " AND u.id = '" . $_GET['email'] . "'";
     }
-    if (!empty($actionData['actionType'])) {
-        $sql .= " AND a.actionType = '" . $actionData['actionType'] . "'";
+    if (!empty($actionData['admin'])) {
+        $sql .= " AND u.email = '" . $actionData['email'] . "'";
     }
-    if (!empty($actionData['townName'])) {
-        $sql .= " AND t.townName = '" . $actionData['townName'] . "'";
+    if (!empty($actionData['action'])) {
+        $sql .= " AND a.action = '" . $actionData['action'] . "'";
+    }
+    if (!empty($actionData['town'])) {
+        $sql .= " AND t.town = '" . $actionData['town'] . "'";
     }
     if (!empty($actionData['minDateTime'])) {
         $sql .= " AND a.dateTime >= '" . $actionData['minDateTime'] . "'";

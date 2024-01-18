@@ -48,7 +48,6 @@ function handleAdmin()
     }
 
     if (isset($_GET['page-editor'])) {
-
     } else {
         renderSideMenu();
     }
@@ -62,7 +61,7 @@ function handleAdmin()
             } else {
                 renderResultsTable();
             }
-        } 
+        }
     }
 
     if (isset($_GET['page-editor'])) {
@@ -73,20 +72,21 @@ function handleAdmin()
     }
 }
 
-function handleCrudActions() {
+function handleCrudActions()
+{
     switch ($_GET['action']) {
         case 'create':
             createRegister($_POST);
             break;
         case 'search':
-            searchRegisters();
+            searchRegisters($_POST);
             break;
         case 'update':
             updateRegister();
-            break;   
+            break;
         case 'delete':
             deleteRegister();
-            break;  
+            break;
     }
 }
 

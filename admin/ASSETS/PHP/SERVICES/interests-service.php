@@ -1,17 +1,5 @@
 <?php
 
-function createInterest($interestInfo)
-{
-    $interestName = $interestInfo['interestName'];
-    $connection = connect();
-    $insertQuery = "insert into interests(interestName) values(?)";
-    $statement = $connection->prepare($insertQuery);
-    $statement->bind_param("s", $interestName);
-    $insertResult = $statement->execute();
-    close($connection);
-    return $insertResult;
-}
-
 function getInterests($interestData)
 {
     $sql = '
@@ -19,8 +7,8 @@ function getInterests($interestData)
         FROM interests
         WHERE 1
     ';
-    if (isset($interestData) && !empty($interestData['interestName'])) {
-        $sql .= ' AND interestName = "' . $interestData['interestName'] . '"';
+    if (isset($interestData) && !empty($interestData['name'])) {
+        $sql .= ' AND name = "' . $interestData['name'] . '"';
     }
     $sql .= ';';
     return getMultipleSearchResult($sql);
