@@ -6,14 +6,6 @@ function getLastInsertedTownId()
     return getSingleSearchResult($sql);
 }
 
-function searchTown($townData)
-{
-    $towns = getTowns($townData);
-    $serializedData = base64_encode(json_encode($towns));
-    $url = '?table=towns&data=' . $serializedData;
-    header('Location: ' . $url);
-}
-
 function getTowns($townData)
 {
     $sql =
@@ -22,6 +14,12 @@ function getTowns($townData)
         FROM towns t
         WHERE 1
     ';
+    $sql = addTownFilters($sql);
+    $sql .= ';';
+    return getMultipleSearchResult($sql);
+}
+
+function addTownFilters($sql) {
     if (!empty($townData['townName'])) {
         $sql .= ' AND t.townName = "' . $townData['townName'] . '"';
     }
@@ -40,6 +38,5 @@ function getTowns($townData)
     if (!empty($townData['maxRating'])) {
         $sql .= ' AND t.rating <= "' . $townData['maxRating'] . '"';
     }
-    $sql .= ';';
-    return getMultipleSearchResult($sql);
+    return $sql;
 }

@@ -33,7 +33,7 @@ function handleNonAdmin()
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_POST['register'])) {
             registerUser();
-        } elseif (isset($_POST['login'])) {
+        } else if (isset($_POST['login'])) {
             authenticateUser();
         }
     } else {
@@ -48,6 +48,7 @@ function handleAdmin()
     }
 
     if (isset($_GET['page-editor'])) {
+        handlePageEditor();
     } else {
         renderSideMenu();
     }
@@ -62,13 +63,6 @@ function handleAdmin()
                 renderResultsTable();
             }
         }
-    }
-
-    if (isset($_GET['page-editor'])) {
-        handlePageEditor();
-    } else {
-        ob_start();
-        ob_end_flush();
     }
 }
 

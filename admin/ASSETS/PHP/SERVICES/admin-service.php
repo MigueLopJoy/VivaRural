@@ -7,7 +7,7 @@ function insertAdminAction($actionType, $articleId = null)
     $actionDate = date("Y-m-d h-m-s");
 
     $connection = connect();
-    $insertQuery = "insert into admin_actions(adminid, actionType, pageId, articleId, dateTime) values(?, ?, ?, ?, ?)";
+    $insertQuery = "insert into admin_actions(admin, action, page, article, dateTime) values(?, ?, ?, ?, ?)";
     $statement = $connection->prepare($insertQuery);
     $statement->bind_param("isiis", $adminId, $action, $pageId, $articleId, $actionDate);
     $statement->execute();

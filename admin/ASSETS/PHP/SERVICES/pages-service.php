@@ -2,9 +2,13 @@
 
 function loadTownPage()
 {
-    $pageId = $_SESSION['pageId'];
-    $pageInfo = getPageContentFromPageId($pageId);
-    renderPageEditor($pageInfo);
+    if (getPageIdFromTownId($_GET['id']) !== null) {
+        $pageId = $_SESSION['pageId'];
+        $pageInfo = getPageContentFromPageId($pageId);
+        renderPageEditor($pageInfo);
+    } else {
+
+    }
 }
 
 function editPageBanner()
@@ -53,6 +57,11 @@ function insertNewPage()
     $insertResult = $statement->execute();
     close($connection);
     return $insertResult;
+
+    $data = array(
+        'town' => $_GET['id'],
+        'thumbnail' => ''
+    );
 }
 
 function editPageBannerInfo($newImage, $pageId)

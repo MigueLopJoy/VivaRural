@@ -1,25 +1,5 @@
 <?php
 
-function createUser($userData)
-{
-    $userData['password'] = isset($userData['password']) ? $userData['password'] : '1234';
-    if (register($userData)) {
-        $insertedUser = getLastInsertedUser();
-        $users = array($insertedUser);
-        $serializedData = base64_encode(json_encode($users));
-        $url = '?table=users&data=' . $serializedData;
-        header('Location: ' . $url);
-    }
-}
-
-function searchUsers($userData)
-{
-    $users = getUsers($userData);
-    $serializedData = base64_encode(json_encode($users));
-    $url = '?table=users&data=' . $serializedData;
-    header('Location: ' . $url);
-}
-
 function getLastInsertedUser()
 {
     $sql = '

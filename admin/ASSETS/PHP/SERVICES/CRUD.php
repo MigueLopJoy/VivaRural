@@ -19,6 +19,27 @@ function createRegister($data)
     handleRedirection($connection, $statement);
 }
 
+function updateRegister($data)
+{
+    $connection = connect();
+    $table = $_GET['table'];
+    $tableFields = getTableFields();
+    $insertQuery = 'UPDATE TABLE ' . $table . ' (';
+    $values = 'VALUES (';
+    foreach ($tableFields as $field) {;
+        if ($field['Field'] !== 'id') {
+            $insertQuery .= $field['Field'] . ', ';
+            $values .= '"' . $data[$field['Field']] . '",';
+        }
+    }
+    $insertQuery = rtrim($insertQuery, ', ') . ') ';
+    $values = rtrim($values, ', ') . ')';
+    $insertQuery .= $values . ';';
+    $statement = $connection->prepare($insertQuery);
+    handleRedirection($connection, $statement);
+}
+
+
 function deleteRegister()
 {
     $connection = connect();

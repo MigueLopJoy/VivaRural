@@ -28,6 +28,8 @@ function registerUser()
 {
     $userData = getInputData();
     $userData['roleId'] = 1;
+    $userData['password'] = password_hash($userData['password'], PASSWORD_BCRYPT);
+    $userData['registrationDate'] = date("Y-m-d");
     if (register($userData)) {
         http_response_code(200);
         echo json_encode(array('responseCode' => 200, 'message' => 'Usuario registrado con éxito'));

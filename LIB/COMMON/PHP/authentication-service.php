@@ -6,7 +6,7 @@ function authenticate($userData)
     $password = $userData['password'];
 
     $connection = connect();
-    $selectQuery = "SELECT userId, password, roleId FROM users WHERE email = ?";
+    $selectQuery = "SELECT id, password, role FROM users WHERE email = ?";
     $statement = $connection->prepare($selectQuery);
     $statement->bind_param("s", $email);
     $statement->execute();

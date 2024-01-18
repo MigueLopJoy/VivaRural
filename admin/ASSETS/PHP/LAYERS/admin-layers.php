@@ -112,7 +112,6 @@ function renderUsersForm()
             <input type="text" name="firstname" placeholder="Nombre">
             <input type="text" name="lastname" placeholder="Apellidos">
             <input type="text" name="email" placeholder="Email">
-            <input type="hidden" name="password" value="1234">
             <input type="text" name="phoneNumber" placeholder="Número de teléfono">
             <input type="text" name="username" placeholder="Nombre de usuario">
     ';
@@ -141,6 +140,8 @@ function renderUsersForm()
         <div class="input-group">
             <input type="date" name="birthDate">
         </div>
+        <input type="hidden" name="password" value="' . password_hash('1234', PASSWORD_BCRYPT) . '">
+        <input type="hidden" name="registrationDate" value="' .  date("Y-m-d") . '">
         ';
     }
     echo '
@@ -262,7 +263,7 @@ function renderTableBtns()
     echo '
                 <div class="d-inline-block search-btn-container mb-3">
                     <a href="?table=' . $_GET['table'] . '&form=search"
-                        class="custom   -btn d-flex align-items-center justify-content-center border rounded fs-3 px-3 py-1">
+                        class="d-flex align-items-center justify-content-center border rounded fs-3 px-3 py-1">
                             <i class="bi bi-search"></i>
                     </a>
                 </div>
@@ -288,7 +289,10 @@ function renderTableHead()
         }
     }
     if ($_GET['table'] !== 'admin_actions') {
-        echo '<th class="text-center">Acción</th></tr></thead>';
+        echo '<th class="text-center">Acción</th>';
+    }
+    if ($_GET['table'] === 'towns') {
+        echo '<th class="text-center">Ver página</th></tr></thead>';
     }
 }
 
@@ -297,14 +301,18 @@ function renderTableBody()
     echo '<tbody>';
     $data = json_decode(base64_decode($_GET['data']));
     foreach ($data as $row) {
+        $id = $row->id;
         echo '<tr>';
         foreach ($row as $field) {
-            if ($field !== $row->id) {
+            if ($field !== $id) {
                 echo '<td class="text-center">' . $field . '</td>';
             }
         }
         if ($_GET['table'] !== 'admin_actions') {
-            createActionBtns($row->id);
+            createActionBtns($id);
+        }
+        if ($_GET['table'] === 'towns') {
+            renderViewPageBtn($id);
         }
         echo '</tr>';
     }
@@ -326,6 +334,17 @@ function createActionBtns($id)
                 <a href="?table=' . $_GET['table'] . '&action=edit&id=' . $id . '" class="text-white">Editar</a>
             </button>
         </div>
+    </td>
+    ';
+}
+
+function renderViewPageBtn($id) {
+    echo '
+    <td class="text-center">
+            <a href="?page-editor&id=' . $id . '" 
+                class="class="d-flex align-items-center justify-content-center border rounded fs-3 px-3 py-1">
+                <i class="bi bi-three-dots"></i>
+            </a>
     </td>
     ';
 }
