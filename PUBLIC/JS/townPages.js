@@ -26,10 +26,10 @@ d.addEventListener("submit", e => {
 const saveComment = async commentsForm => {
     let url = `./../../API/pages-service.php?save-comment`,
         comment = JSON.stringify({
-            rating: commentsForm.ratingValue.value,
-            pageId: getPageId(),
-            userId: getCookie('userId'),
-            commentText: commentsForm.commentText.value
+            rating: commentsForm.rating.value,
+            page: getPageId(),
+            user: getCookie('userId'),
+            text: commentsForm.text.value
         })
     try {
         let commentResult = await fetchHandler(url, getRequestData("POST", comment))
@@ -43,8 +43,8 @@ const saveComment = async commentsForm => {
 const getPageId = () => {
     let values = window.location.search,
         urlParams = new URLSearchParams(values),
-        pageId = urlParams.get('pageId')
-    return pageId
+        id = urlParams.get('id')
+    return id
 }
 
 const getTownPageInfo = async pageId => {
@@ -58,7 +58,7 @@ const renderBanner = async pageInfo => {
         bannerClone = d.importNode(bannerTemplate.content, true)
 
     bannerClone.querySelector(".banner-img-container").style.backgroundImage = `url(./../../LIB/MEDIA/IMGS/${pageInfo.bannerImage})`
-    bannerClone.querySelector(".page-title-container h2").textContent += pageInfo.townName
+    bannerClone.querySelector(".page-title-container h2").textContent += pageInfo.town
 
     bannerContainer.appendChild(bannerClone)
 }
@@ -69,7 +69,7 @@ const renderArticles = async pageInfo => {
         let articlesContainer = d.querySelector(".articles-section .articles-container"),
             article = articles[i],
             articleTemplate,
-            templateType = article.templateType
+            templateType = article.template
 
         switch (templateType) {
             case "1":
@@ -89,56 +89,81 @@ const renderArticleContent = articleElements => {
     for (let i = 0; i < articleElements.length; i++) {
         let article = d.querySelector(".articles-section .articles-container").lastElementChild,
             element = articleElements[i],
-            elementReference = element.elementReference
+            elementReference = element.reference
 
         if (elementReference === 'article-image') {
-            article.querySelector(`.${elementReference}`).src = `./../../LIB/MEDIA/IMGS/${element.elementContent}`
+            article.querySelector(`.${elementReference}`).src = `./../../LIB/MEDIA/IMGS/${element.content}`
         } else {
-            article.querySelector(`.${elementReference}`).textContent = element.elementContent
+            article.querySelector(`.${elementReference}`).textContent = element.content
         }
     }
 }
 
 const handleCommentsSection = async pageId => {
     let commentsSection = d.querySelector(".comments-container")
-    if (getCookie("userId") !== null) {
+    if (getCookie("userId")) {
         await loadHtmlComponent("./comments.html", commentsSection)
         enableUsersRating()
         await renderComments(pageId)
+        await getTownRating(pageId)
     } else {
         d.querySelector(".ask-for-login").classList.remove("d-none")
     }
 }
 
-const renderComments = async pageId => {
-    let url = `./../../API/pages-service.php?get-comments&pageId=${pageId}`,
+const renderComments = async (pageId) => {
+    let url = `./../../API/pages-service.php?get-comments&id=${pageId}`,
         comments = await fetchHandler(url)
 
     if (comments.length > 0) {
         let commentsWindow = d.querySelector(".comments-window")
+
         for (let i = 0; i < comments.length; i++) {
-            let comment = comments[i],
-                commentTemplate = d.querySelector(".comment-template"),
-                commentClone = d.importNode(commentTemplate.content, true)
-            commentsWindow.appendChild(commentClone)
-            renderCommentContent(comment)
+            let comment = comments[i]
+            let commentContainer = document.createElement("div")
+            commentContainer.classList.add("col-4")
+
+            let commentCard = document.createElement("div")
+            commentCard.classList.add("comment-card", "p-3", "mb-3", "rounded", "shadow")
+
+            let commentRating = document.createElement("div")
+            commentRating.classList.add("comment-rating", "mb-2")
+            for (let j = 0; j < 5; j++) {
+                let star = document.createElement("span")
+                star.classList.add("rating-star")
+                if (j < comment.rating) {
+                    star.classList.add("active")
+                }
+                star.textContent = "★"
+                commentRating.appendChild(star)
+            }
+
+            let commentAuthor = document.createElement("h5")
+            commentAuthor.classList.add("comment-author", "mb-2")
+            commentAuthor.textContent = `${comment.firstname} ${comment.lastname}`
+
+            let commentText = document.createElement("p")
+            commentText.classList.add("comment-text", "mb-2")
+            commentText.textContent = comment.text
+
+            commentCard.appendChild(commentRating)
+            commentCard.appendChild(commentAuthor)
+            commentCard.appendChild(commentText)
+            commentContainer.appendChild(commentCard)
+
+            commentsWindow.appendChild(commentContainer)
         }
     } else {
         console.log("No hay comentarios")
     }
 }
 
-const renderCommentContent = comment => {
-    let commentsWindow = d.querySelector(".comments-window")
-    if (commentsWindow) {
-        let commentHTML = d.querySelector(".comments-window").lastElementChild
-        commentHTML.querySelector(".comment-author").textContent = `${comment.firstname} ${comment.lastname}`
-        commentHTML.querySelector(".comment-text").textContent = comment.commentText
-        let commentStars = commentHTML.querySelectorAll(".comment-rating .rating-star")
-        for (let i = 0; i < comment.rating; i++) {
-            commentStars[i].classList.add("active")
-        }
-    }
+const getTownRating = async pageId => {
+    let url = `./../../API/pages-service.php?get-rating&id=${pageId}`,
+        averageRating = await fetchHandler(url),
+        roundedValue = Math.round(averageRating * 10) / 10,
+        averageRatingSpan = d.querySelector(".average-rating")
+    averageRatingSpan.textContent = `${roundedValue}/5`;
 }
 
 const enableUsersRating = () => {

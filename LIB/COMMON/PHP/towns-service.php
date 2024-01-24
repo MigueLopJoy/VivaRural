@@ -2,10 +2,10 @@
 function getTownNameFromPageId($pageId)
 {
     $sql = '
-        SELECT townName FROM towns t
+        SELECT name FROM towns t
         INNER JOIN town_pages tp
-        ON t.townId = tp.townId
-        WHERE tp.pageId = ' . $pageId . '
+        ON t.id = tp.town
+        WHERE tp.id = ' . $pageId . '
     ';
     return getSingleSearchResult($sql);
 }

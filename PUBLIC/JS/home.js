@@ -3,6 +3,8 @@ import {
     loadHtmlComponent
 } from "./utils.js"
 
+import { notifyRegistrationSuccess } from "./auth.js"
+
 const d = document
 
 d.addEventListener("DOMContentLoaded", async () => {
@@ -20,10 +22,10 @@ const renderDestinations = async () => {
             destinationTemplate = d.querySelector(".destination-template"),
             cardClone = d.importNode(destinationTemplate.content, true)
 
-        cardClone.querySelector(".card-link").href = `./HTML/town-page.html?pageId=${destination.pageId}`
+        cardClone.querySelector(".card-link").href = `./HTML/town-page.html?id=${destination.id}`
         cardClone.querySelector(".img-container img").src = `./../LIB/MEDIA/IMGS/${destination.thumbnail}`
         cardClone.querySelector(".img-container img").alt = `${destination.townName}`
-        cardClone.querySelector(".destination-name").textContent = destination.townName
+        cardClone.querySelector(".destination-name").textContent = destination.name
 
         destinationsContainer.appendChild(cardClone)
     }

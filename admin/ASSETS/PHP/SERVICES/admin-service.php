@@ -1,22 +1,35 @@
 <?php
-function insertAdminAction($actionType, $articleId = null)
+function insertAction($actionData)
 {
-    $adminId = $_SESSION['logged-admin'];
-    $pageId = isset($_SESSION['pageId']) ? $_SESSION['pageId'] : null;
-    $action = getAction($actionType);
-    $actionDate = date("Y-m-d h-m-s");
+    $admin = $_SESSION['logged-admin'];
+    $action = $actionData['action'];
+    $table = $actionData['table'];
+    $element = $actionData['element'];
+    $date = date("Y-m-d h-i-s");
 
     $connection = connect();
-    $insertQuery = "insert into admin_actions(admin, action, page, article, dateTime) values(?, ?, ?, ?, ?)";
+    $insertQuery = "insert into admin_actions(admin, action, `table`, element, dateTime) values(?, ?, ?, ?, ?)";
     $statement = $connection->prepare($insertQuery);
-    $statement->bind_param("isiis", $adminId, $action, $pageId, $articleId, $actionDate);
-    $statement->execute();
+    $statement->bind_param("issis", $admin, $action, $table, $element, $date);
+    $insertResult = $statement->execute();
     close($connection);
+    return $insertResult;
+}
+
+function getActionData()
+{
+    return array(
+        'action' => isset($_GET['action']) ? $_GET['action'] : (isset($_GET['logout']) ? 'logout' : 'login'),
+        'table' => isset($_GET['table']) ? $_GET['table'] : '',
+        'element' => isset($_GET['id']) ?
+            $_GET['id'] : (isset($_GET['action']) && $_GET['action'] === 'search'  ?
+                '' : (isset($_GET['action']) && $_GET['action'] === 'create' ? call_user_func('getLast' . $_GET['table'])['id'] : ''))
+    );
 }
 
 function logout()
 {
-    insertAdminAction(8);
+    insertAction(getActionData());
     session_destroy();
     header("Location: ?");
 }
@@ -24,11 +37,10 @@ function logout()
 function getadmin_actions($actionData)
 {
     $sql = '
-        SELECT a.id, u.email, a.action, t.name, a.article, a.dateTime
+        SELECT a.id, u.email, a.action, a.table, a.element, a.dateTime
         FROM admin_actions a
-        INNER JOIN users u ON a.admin = u.id
-        LEFT JOIN town_pages tp ON a.page = tp.id
-        LEFT JOIN towns t ON tp.town = t.id
+        INNER JOIN users u 
+        ON a.admin = u.id
     ';
     $sql .= ' WHERE 1';
     if (isset($_GET['id'])) {
@@ -51,27 +63,4 @@ function getadmin_actions($actionData)
     }
     $sql .= ';';
     return getMultipleSearchResult($sql);
-}
-
-
-function getAction($actionType)
-{
-    switch ($actionType) {
-        case 1:
-            return "login";
-        case 2:
-            return "create town and town page";
-        case 3:
-            return "search town page";
-        case 4:
-            return "edit banner";
-        case 5:
-            return "create article";
-        case 6:
-            return "edit article";
-        case 7:
-            return "delete article";
-        case 8:
-            return "logout";
-    }
 }

@@ -1,0 +1,29 @@
+/* HEADER BEGIN */
+
+.page-logo-container img {
+    width: 5rem;
+}
+
+.open-auth-modal {
+    cursor: pointer;
+}
+
+.page-header {
+    z-index: 2;
+}
+
+/* HEADER END */
+
+
+/* HERO BEGIN */
+
+.hero-container {
+    background-image: url(./../../LIB/MEDIA/IMGS/page-banner.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: calc(100vh - 112px);
+    margin-top: 112px;
+}
+
+/* Hero END */

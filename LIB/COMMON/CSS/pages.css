@@ -33,6 +33,34 @@ main {
 
 /* BANNER END */
 
+/* AUTH MODAL BEGIN */
+
+.auth-overlay {
+    background: rgba(0, 0, 0, 0.7);
+    padding-top: 5rem;
+    z-index: 3;
+}
+
+.close-btn {
+    color: #FF0000;
+    font-size: 1.5rem;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: #CCC;
+}
+
+.close-btn:active {
+    color: #FF0000;
+}
+
+
+/* AUTH MODAL END */
+
 /* ARTICLES BEGIN */
 
 .img-container img {
@@ -46,6 +74,7 @@ main {
 }
 
 /* ARTICLES END */
+
 
 /* COMMENTS SECTION BEGIN */
 

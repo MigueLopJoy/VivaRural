@@ -28,8 +28,7 @@ function renderSideMenu()
     foreach ($tables as $table) {
         $table = $table['Tables_in_vivarural'];
         if (array_key_exists($table, $tableTranslations)) {
-            echo
-            '
+            echo '
             <li>
                 <a class="nav-link text-white" href="?table=' . $table . '&action=search">' . $tableTranslations[$table] . '</a>
             </li>
@@ -64,28 +63,39 @@ function renderMenuForms()
 {
     $table = $_GET['table'];
     echo '
-        <div class="wrapper w-50 m-auto">
-            <div class="box m-auto position-relative shadow bg-white rounded p-5 pb-4">
+        <div class="wrapper w-100 h-100 d-flex align-items-center justify-content-center">
+            <div class="box w-50 position-relative shadow bg-white rounded p-5 pb-4">
         ';
     call_user_func('render' . $table . 'Form');
 }
 
 function renderTownsForm()
 {
-    $action = ($_GET['form'] === 'create') ? 'create' : 'search';
+    $form = $_GET['form'];
+    $parameters = getFormParameters();
+    if (isset($_GET['data'])) {
+        $data = json_decode(base64_decode($_GET['data']), true);
+        $name = $data['name'];
+        $region = $data['region'];
+        $province = $data['province'];
+        $postalCode = $data['postalCode'];
+    }
     echo '
     <div class="towns-forms-container">
-        <form method="POST" action="?table=' . $_GET['table'] . '&action=' . $action . '" class="form">
-            <input type="text" name="name" placeholder="Town Name">
-            <input type="text" name="region" placeholder="Region">
-            <input type="text" name="province" placeholder="Province">
-            <input type="text" name="postalCode" placeholder="Postal Code">
+        <div class="form-title text-center mb-3">
+            <h2>' . $parameters['title'] . '</h2>
+        </div>  
+        <form method="POST" action="' . $parameters['url'] . '" class="form">
+            <input type="text" name="name" placeholder="Nombre" value="' . (isset($name) ? $name : '') . '"  ' . ($form !== 'search' ? 'required="true"' : '') . '>
+            <input type="text" name="region" placeholder="Región" value="' . (isset($region) ? $region : '') . '"  ' . ($form !== 'search' ? 'required="true"' : '') . '>
+            <input type="text" name="province" placeholder="Provincia" value="' . (isset($province) ? $province : '') . '"  ' . ($form !== 'search' ? 'required="true"' : '') . '>
+            <input type="text" name="postalCode" placeholder="Código Postal" value="' . (isset($postalCode) ? $postalCode : '') . '"  ' . ($form !== 'search' ? 'required="true"' : '') . '>
     ';
-    if ($_GET['form'] === 'create') {
-        echo '
-        <input type="file" name="thumbnail" accept="image/*">
-        <input type="submit" name="create-town" value="Crear">
-        ';
+    if ($form !== 'search') {
+        if ($form === 'create') {
+            echo '<input type="hidden" name="rating" value="">';
+        }
+        echo '<input type="file" name="thumbnail" accept="image/*">';
     } else {
         echo '
         <div class="input-group">
@@ -95,98 +105,109 @@ function renderTownsForm()
             <div class="col-6 ps-1">
                 <input type="text" name="maxRating" placeholder="Max Rating">
             </div>
-        </div>        
-        <input type="submit" name="search-town" value="Buscar">
-                    
+        </div>           
         ';
     }
-    echo '</form></div></div>';
+    echo '
+        <input type="submit" value="' . $parameters['btn'] . '">             
+    </form></div></div>';
 }
 
 function renderUsersForm()
 {
-    $action = ($_GET['form'] === 'create') ? 'create' : 'search';
+    $form = $_GET['form'];
+    $parameters = getFormParameters();
+    if (isset($_GET['data'])) {
+        $data = json_decode(base64_decode($_GET['data']), true);
+        $firstname = $data['firstname'];
+        $lastname = $data['lastname'];
+        $email = $data['email'];
+        $phoneNumber = $data['phoneNumber'];
+        $userName = $data['userName'];
+        $role = $data['role'];
+    }
     echo '
     <div class="users-forms-container">
-        <form method="POST" action="?table=' . $_GET['table'] . '&action=' . $action . '" class="form">
-            <input type="text" name="firstname" placeholder="Nombre">
-            <input type="text" name="lastname" placeholder="Apellidos">
-            <input type="text" name="email" placeholder="Email">
-            <input type="text" name="phoneNumber" placeholder="Número de teléfono">
-            <input type="text" name="username" placeholder="Nombre de usuario">
+        <div class="form-title text-center mb-3">
+            <h2>' . $parameters['title'] . '</h2>
+        </div>  
+        <form method="POST" action="' . $parameters['url'] . '" class="form">
+            <input type="text" name="firstname" placeholder="Nombre" value="' . (isset($firstname) ? $firstname : '') . '"  ' . ($form !== 'search' ? 'required="true"' : '') . '>
+            <input type="text" name="lastname" placeholder="Apellidos" value="' . (isset($lastname) ? $lastname : '') . '"  ' . ($form !== 'search' ? 'required="true"' : '') . '>
+            <input type="text" name="email" placeholder="email" value="' . (isset($email) ? $email : '') . '"  ' . ($form !== 'search' ? 'required="true"' : '') . '>
+            <input type="text" name="phoneNumber" placeholder="Número de teléfono" value="' . (isset($phoneNumber) ? $phoneNumber : '') . '"  ' . ($form !== 'search' ? 'required="true"' : '') . '>
+            <input type="text" name="username" placeholder="Nombre de usuario" value="' . (isset($userName) ? $userName : '') . '"  ' . ($form !== 'search' ? 'required="true"' : '') . '>        
     ';
-
-    if ($_GET['form'] === 'search') {
+    if ($parameters['action'] === 'search') {
         echo '
         <div class="input-group">
-            <div class="col-6 pe-1">
-                <input type="date" name="minBirthDate" placeholder="Fec. Nac. Min.">
+            <div class="w-100">
+                <label>Rango de fecha de nacimiento:</label>
             </div>
-            <div class="col-6 ps-1">
-                <input type="date" name="maxBirthDate" placeholder="Fec. Nac. Max">
+            <div class="row w-100">
+                <div class="col-6 ps-0 pe-1">
+                    <input type="date" name="minBirthDate" placeholder="Fec. Nac. Min.">
+                </div>
+                <div class="col-6 ps-1 pe-0">
+                    <input type="date" name="maxBirthDate" placeholder="Fec. Nac. Max">
+                </div>
             </div>
         </div>
         <div class="input-group">
-            <div class="col-6 pe-1">
-                <input type="date" name="minRegistrationDate" placeholder="Fec. Reg. Min.">
+            <div class="w-100">
+                <label>Rango de fecha de registro:</label>
             </div>
-            <div class="col-6 ps-1">
-                <input type="date" name="maxRegistrationDate" placeholder="Fec. Reg. Max">
+            <div class="row w-100">
+                <div class="col-6 pe-1 ps-0">
+                    <input type="date" name="minRegistrationDate" placeholder="Fec. Reg. Min.">
+                </div>
+                <div class="col-6 ps-1 pe-0">
+                    <input type="date" name="maxRegistrationDate" placeholder="Fec. Reg. Max">
+                </div>
             </div>
         </div>
         ';
     } else {
         echo '
         <div class="input-group">
-            <input type="date" name="birthDate">
+            <label for="birthDate">Fecha de nacimiento:</label>
+            <input type="date" name="birthDate" value="' . (isset($data) ? date('Y-m-d', strtotime($data['birthDate'])) : '') . '">
         </div>
         <input type="hidden" name="password" value="' . password_hash('1234', PASSWORD_BCRYPT) . '">
-        <input type="hidden" name="registrationDate" value="' .  date("Y-m-d") . '">
         ';
     }
     echo '
     <input type="hidden" name="registrationDate" value="' . date("Y-m-d") . '">
     <div class="input-group">
-        <select name="role">
-            <option value="" disabled selected>Elegir Rol</option>
+        <select name="role" value="' . (isset($role) ? $role : '') . '"  ' . ($form !== 'search' ? 'required="true"' : '') . '>
+            <option value="" disabled selected>Elegir rol</option>
             <option value="1">Administrador</option>
             <option value="2">Usuario</option>
         </select>
     </div>
+    <input type="submit" value="' . $parameters['btn'] . '">
+    </form></div></div>
     ';
-    if ($_GET['form'] === 'search') {
-        echo '
-        <div class="form-group">
-            <input type="submit" value="Buscar">
-        </div>        
-        ';
-    } else {
-        echo '
-        <div class="form-group">
-            <input type="submit" value="Crear">
-        </div>
-        ';
-    }
-    echo '</form></div></div>';
 }
 
 function renderInterestsForm()
 {
-    $action = ($_GET['form'] === 'create') ? 'create' : 'search';
-    echo '
-        <div class="interest-forms-container">
-            <div class="form-title text-center mb-3">
-                <h2>Buscar Interés</h2>
-            </div>   
-            <form method="POST" action="?table=' . $_GET['table'] . '&action=' . $action . '" class="form">
-                <input type="text" name="name" placeholder="Interés">
-    ';
-    if ($action === 'create') {
-        echo '<input type="submit" value="Crear">';
-    } else {
-        echo '<input type="submit" value="Buscar">';
+    $form = $_GET['form'];
+    $parameters = getFormParameters();
+    if (isset($_GET['data'])) {
+        $data = json_decode(base64_decode($_GET['data']), true);
+        $name = $data['name'];
     }
-    echo '</form></div></div>';
+    echo '
+    <div class="interest-forms-container">
+        <div class="form-title text-center mb-3">
+            <h2>' . $parameters['title'] . '</h2>
+        </div>   
+        <form method="POST" action="' . $parameters['url'] . '" class="form">
+            <input type="text" name="name" placeholder="Interés" value="' . (isset($name) ? $name : '') . '" ' . ($form !== 'search' ? 'required="true"' : '') . '>
+            <input type="submit" value="' . $parameters['btn'] . '">
+        </form>
+    </div></div>';
 }
 
 function renderAdmin_actionsForm()
@@ -226,15 +247,50 @@ function renderAdmin_actionsForm()
     ';
 }
 
+function getFormParameters()
+{
+    $parameters = array();
+    $action = '';
+    $title = '';
+    $btn = '';
+    $url = '?table=' . $_GET['table'];
+    switch ($_GET['form']) {
+        case 'create':
+            $action = 'create';
+            $title = 'Crear ' . $_GET['table'];
+            $btn = 'Crear';
+            $url .= '&action=' . $action;
+            break;
+        case 'edit':
+            $action = 'edit';
+            $title = 'Editar ' . $_GET['table'];
+            $btn = 'Editar';
+            $url .= '&action=' . $action . '&id=' . $_GET['id'];
+            break;
+        case 'search':
+            $action = 'search';
+            $title = 'Buscar ' . $_GET['table'];
+            $btn = 'Buscar';
+            $url .= '&action=' . $action;
+            break;
+    }
+    $parameters['action'] = $action;
+    $parameters['title'] = $title;
+    $parameters['btn'] = $btn;
+    $parameters['url'] = $url;
+    return $parameters;
+}
+
+
 function renderResultsTable()
 {
     echo '
-    <div class="wrapper h-100 px-5">
-        <div class="box m-auto position-relative shadow bg-white rounded p-5 py-4 h-75">
+    <div class="wrapper w-100 h-100 d-flex align-items-center justify-content-center">
+        <div class="box results-box w-75 position-relative shadow bg-white rounded p-5 py-4">
     ';
     renderActionResultMessage();
     renderTableBtns();
-    if ($_GET['data'] !== 'W10=') {
+    if ($_SESSION['data'] !== 'W10=') {
         renderTableHead();
         renderTableBody();
     } else {
@@ -261,16 +317,16 @@ function renderTableBtns()
         ';
     }
     echo '
-                <div class="d-inline-block search-btn-container mb-3">
-                    <a href="?table=' . $_GET['table'] . '&form=search"
-                        class="d-flex align-items-center justify-content-center border rounded fs-3 px-3 py-1">
-                            <i class="bi bi-search"></i>
-                    </a>
-                </div>
-                <div class="close-table-container d-inline-block border rounded float-end">
-                    <a href="?" class="fs-3 px-3 py-1">X</a>
-                </div>
-            </div>
+        <div class="d-inline-block search-btn-container mb-3">
+            <a href="?table=' . $_GET['table'] . '&form=search"
+                class="d-flex align-items-center justify-content-center border rounded fs-3 px-3 py-1">
+                    <i class="bi bi-search"></i>
+            </a>
+        </div>
+        <div class="close-table-container d-inline-block border rounded float-end">
+            <a href="?" class="fs-3 px-3 py-1">X</a>
+        </div>
+    </div>
     ';
 }
 
@@ -299,9 +355,9 @@ function renderTableHead()
 function renderTableBody()
 {
     echo '<tbody>';
-    $data = json_decode(base64_decode($_GET['data']));
+    $data = json_decode(base64_decode($_SESSION['data']), true);
     foreach ($data as $row) {
-        $id = $row->id;
+        $id = $row['id'];
         echo '<tr>';
         foreach ($row as $field) {
             if ($field !== $id) {
@@ -309,7 +365,7 @@ function renderTableBody()
             }
         }
         if ($_GET['table'] !== 'admin_actions') {
-            createActionBtns($id);
+            renderActionBtns($id, base64_encode(json_encode($row)));
         }
         if ($_GET['table'] === 'towns') {
             renderViewPageBtn($id);
@@ -319,32 +375,33 @@ function renderTableBody()
     echo '</tbody></table></div>';
 }
 
-function createActionBtns($id)
+function renderActionBtns($id, $data)
 {
     echo
     '
     <td class="d-flex justify-content-center">
-        <div class="col-6 text-center me-1">
+        <div class="d-inline-block text-center me-1">
             <button class="btn btn-danger" type="button">
                 <a href="?table=' . $_GET['table'] . '&action=delete&id=' . $id . '" class="text-white">Eliminar</a>
             </button>
         </div>
-        <div class="col-6 text-center ms-1">
+        <div class="d-inline-block text-center ms-1">
             <button class="btn btn-success" type="button">
-                <a href="?table=' . $_GET['table'] . '&action=edit&id=' . $id . '" class="text-white">Editar</a>
+                <a href="?table=' . $_GET['table'] . '&form=edit&id=' . $id . '&data=' . $data . '" class="text-white">Editar</a>
             </button>
         </div>
     </td>
     ';
 }
 
-function renderViewPageBtn($id) {
+function renderViewPageBtn($id)
+{
     echo '
     <td class="text-center">
-            <a href="?page-editor&id=' . $id . '" 
-                class="class="d-flex align-items-center justify-content-center border rounded fs-3 px-3 py-1">
-                <i class="bi bi-three-dots"></i>
-            </a>
+        <a href="?page-editor&town=' . $id . '" 
+            class="class="d-flex align-items-center justify-content-center border rounded fs-3 px-3 py-1">
+            <i class="bi bi-three-dots"></i>
+        </a>
     </td>
     ';
 }

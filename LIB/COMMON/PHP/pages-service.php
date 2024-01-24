@@ -6,22 +6,22 @@ function getPageContentFromPageId($pageId)
     $articles = array();
     $articlesInfo = findArticlesByPageId($pageId);
     foreach ($articlesInfo as $pageArticle) {
-        $articleId = $pageArticle['articleid'];
+        $articleId = $pageArticle['id'];
         $article = array();
-        $article['articleId'] = $articleId;
-        $article['templateType'] = $pageArticle['templateType'];
+        $article['id'] = $articleId;
+        $article['template'] = $pageArticle['template'];
         $article['elements'] = array();
         $articleElements = findArticleElementsByArticleId($articleId);
         foreach ($articleElements as $element) {
             $article['elements'][] =  array(
-                'articleElementId' => $element['articleElementId'],
-                'elementReference' => $element['elementReference'],
-                'elementContent' => $element['elementContent']
+                'id' => $element['id'],
+                'reference' => $element['reference'],
+                'content' => $element['content']
             );
         }
         $articles[] = $article;
     }
-    $pageContent['townName'] = getTownNameFromPageId($pageId)['townName'];
+    $pageContent['town'] = getTownNameFromPageId($pageId)['name'];
     $pageContent['bannerImage'] = getPageBannerImageFromPageId($pageId)['bannerImage'];
     $pageContent['articles'] = $articles;
     return $pageContent;
@@ -31,7 +31,7 @@ function getPageBannerImageFromPageId($pageId)
 {
     $sql = '
         SELECT bannerImage FROM town_pages tp
-        WHERE tp.pageId = ' . $pageId . ';
+        WHERE tp.id = ' . $pageId . ';
     ';
     return getSingleSearchResult($sql);
 }

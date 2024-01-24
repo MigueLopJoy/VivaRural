@@ -7,7 +7,7 @@ d.addEventListener('change', e => {
             reader = new FileReader()
 
         reader.onload = event => {
-            if (e.target.matches("#banner-img-input")) {
+            if (e.target.matches("#bannerImage")) {
                 pageBanner = d.querySelector(".page-banner .banner-img-container")
                 console.log(pageBanner)
                 console.log(event.target.result)

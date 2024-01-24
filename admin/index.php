@@ -31,9 +31,7 @@ renderPageBottom();
 function handleNonAdmin()
 {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        if (isset($_POST['register'])) {
-            registerUser();
-        } else if (isset($_POST['login'])) {
+        if (isset($_POST['login'])) {
             authenticateUser();
         }
     } else {
@@ -46,16 +44,13 @@ function handleAdmin()
     if (isset($_GET['logout'])) {
         logout();
     }
-
-    if (isset($_GET['page-editor'])) {
-        handlePageEditor();
-    } else {
-        renderSideMenu();
-    }
-
     if (isset($_GET['action'])) {
         handleCrudActions();
+    }
+    if (isset($_GET['page-editor'])) {
+        loadTownPage();
     } else {
+        renderSideMenu();
         if (isset($_GET['table'])) {
             if (isset($_GET['form'])) {
                 renderMenuForms();
@@ -68,15 +63,16 @@ function handleAdmin()
 
 function handleCrudActions()
 {
+    $data = getCrudData();
     switch ($_GET['action']) {
         case 'create':
-            createRegister($_POST);
+            createRegister($data);
             break;
         case 'search':
-            searchRegisters($_POST);
+            searchRegisters($data);
             break;
-        case 'update':
-            updateRegister();
+        case 'edit':
+            editRegister($data);
             break;
         case 'delete':
             deleteRegister();
@@ -84,24 +80,25 @@ function handleCrudActions()
     }
 }
 
-function handlePageEditor()
+function getCrudData()
 {
-    if (isset($_GET['handle-article'])) {
-        handleArticle();
-    } elseif (isset($_GET['edit-page'])) {
-        editPageBanner();
+    $data = null;
+    if (isset($_GET['data'])) {
+        $data = json_decode(base64_decode($_GET['data']), true);
     } else {
-        loadTownPage();
+        if (!empty($_FILES)) {
+            if (isset($_FILES['article-image'])) {
+                if (!empty($_FILES['article-image']['name'])) {
+                    $data['article-image'] = $_FILES['article-image']['name'];
+                }
+                $data['article-title'] = $_POST['article-title'];
+                $data['article-content'] = $_POST['article-content'];
+            } else if (isset($_FILES['bannerImage'])) {
+                $data = $_FILES['bannerImage']['name'];
+            }
+        } else {
+            $data = $_POST;
+        }
     }
-}
-
-function handleArticle()
-{
-    if (isset($_GET['new-template'])) {
-        createNewTemplate();
-    } elseif (isset($_GET['edit-article'])) {
-        editArticle();
-    } elseif (isset($_GET['delete-article'])) {
-        handleArticleDeletion();
-    }
+    return $data;
 }

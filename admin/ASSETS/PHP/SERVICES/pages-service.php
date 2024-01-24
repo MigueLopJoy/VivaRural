@@ -2,90 +2,44 @@
 
 function loadTownPage()
 {
-    if (getPageIdFromTownId($_GET['id']) !== null) {
+    $townPageId = getPageIdFromTownId($_GET['town']);
+    $pageId = isset($townPageId) ? $townPageId['id'] : null;
+    if ($pageId !== null) {
+        if (!isset($_SESSION['pageId'])) {
+            $_SESSION['pageId'] = $pageId;
+        }
         $pageId = $_SESSION['pageId'];
         $pageInfo = getPageContentFromPageId($pageId);
         renderPageEditor($pageInfo);
     } else {
-
+        createTownPage();
     }
-}
-
-function editPageBanner()
-{
-    editPageBannerInfo(
-        $_FILES['banner-img-input']['name'],
-        $_SESSION['pageId']
-    );
-    insertAdminAction(4);
-    redirectToTownPage();
 }
 
 function createTownPage()
 {
-    insertNewPage();
-    $pageId = (getLastInsertedPageId())['pageId'];
-    $_SESSION['pageId'] = $pageId;
-    insertAdminAction(2);
-    redirectToTownPage();
-}
-
-function searchTownPage()
-{
-    $townInfo = searchTown($_POST);
-    $townId = $townInfo['townid'];
-    $pageId = (getPageIdFromTownId($townId))['pageId'];
-    $_SESSION['pageId'] = $pageId;
-    insertAdminAction(3);
-    redirectToTownPage();
-}
-
-function redirectToTownPage()
-{
-    header("Location: ?page-editor");
-    exit();
-}
-
-function insertNewPage()
-{
-    $townId = getLastInsertedTownId()['townId'];
-    $thumbnail = $_POST['thumbnail'];
-    $connection = connect();
-    $insertQuery = "insert into town_pages(townId, thumbnail) values(?, ?)";
-    $statement = $connection->prepare($insertQuery);
-    $statement->bind_param("is", $townId, $thumbnail);
-    $insertResult = $statement->execute();
-    close($connection);
-    return $insertResult;
-
+    $town = $_GET['town'];
+    $url = '?page-editor&town=' . $town . '&table=town_pages&action=create&data=';
     $data = array(
-        'town' => $_GET['id'],
-        'thumbnail' => ''
+        'town' => $town,
+        'bannerImage' => 'example-banner.png'
     );
-}
-
-function editPageBannerInfo($newImage, $pageId)
-{
-    $sql = '
-        UPDATE town_pages tp
-        SET bannerImage = "' . $newImage . '"
-        WHERE tp.pageId = ' . $pageId . '
-    ';
-    executeSql($sql);
-}
-
-function getLastInsertedPageId()
-{
-    $sql = 'SELECT MAX(pageId) as pageId FROM town_pages;';
-    return getSingleSearchResult($sql);
+    $serializedData = base64_encode(json_encode($data));
+    header('Location: ' . $url . $serializedData);
 }
 
 function getPageIdFromTownId($townId)
 {
     $sql =
         '
-            SELECT pageId FROM `town_pages` tp
-            WHERE tp.townId = ' . $townId . ';
+            SELECT id FROM `town_pages` tp
+            WHERE tp.town = ' . $townId . ';
         ';
+    return getSingleSearchResult($sql);
+}
+
+function getLastTown_pages()
+{
+    $sql = 'SELECT MAX(id) as id FROM town_pages;';
     return getSingleSearchResult($sql);
 }

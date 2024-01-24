@@ -8,13 +8,17 @@
             <span class="rating-star" value="2">★</span>
             <span class="rating-star" value="1">★</span>
 
-            <input type="hidden" name="ratingValue" class="rating-value" value="">
+            <input type="hidden" name="rating" class="rating-value" value="">
         </div>
         <div class="form-group">
-            <textarea class="form-control comment-box" name="commentText" placeholder="Escribe un comentario..."
+            <textarea class="form-control comment-box" name="text" placeholder="Escribe un comentario..."
                 aria-setsize="none" required></textarea>
         </div>
         <input type="submit" value="Enviar">
     </form>
 </div>
-<div class="row comments-window d-flex bg-white p-5"></div>
+<div class="row comments-window d-flex bg-white p-5">
+    <div class="col-12 average-rating-container text-center mb-4">
+        <h5>Valoración media del sitio: <span class="average-rating"></span></h5>
+    </div>
+</div>

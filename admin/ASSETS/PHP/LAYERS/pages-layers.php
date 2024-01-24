@@ -3,7 +3,7 @@ function renderPageEditor($pageInfo)
 {
     echo '<main class="mb-5">';
     renderBanner($pageInfo);
-    if ($pageInfo !== null) {
+    if (!empty($pageInfo['articles'])) {
         renderArticles($pageInfo['articles']);
     }
     echo '</main>';
@@ -17,15 +17,15 @@ function renderBanner($pageInfo)
     $banerImage = !empty($pageInfo['bannerImage']) ? $pageInfo['bannerImage'] : 'example-banner.png';
     echo '
         <section class="page-section page-banner mb-5">
-            <form action="?page-editor&edit-page" method="POST" enctype="multipart/form-data">
-                <input type="file" id="banner-img-input" name="banner-img-input" accept="image/*" class="image-upload d-none">
-                <label for="banner-img-input" class="editable-image-label w-100 h-100">
+            <form action="?page-editor&town=' . $_GET['town'] . '&table=town_pages&action=edit&id=' . $_SESSION['pageId'] . '" method="POST" enctype="multipart/form-data">
+                <input type="file" id="bannerImage" name="bannerImage" accept="image/*" class="image-upload d-none">
+                <label for="bannerImage" class="editable-image-label w-100 h-100">
                     <div class="banner-img-container w-100 h-100" style="background-image: url(./../LIB/MEDIA/IMGS/' . $banerImage . ');">
                         <div class="container-fluid page-header py-5">
                             <div class="container text-center py-5 h-auto">
                                 <div class="page-title-container d-inline-block px-4 py-2">
                                     <h1 class="text-white fw-bold d-inline-block w-auto">
-                                        ' . $pageInfo["townName"] . '
+                                        ' . $pageInfo["town"] . '
                                     </h1>
                                 </div>
                             </div>
@@ -46,40 +46,26 @@ function renderArticles($articles)
         <section class="page-section articles-section mb-5">
             <div class="container">
         ';
-
     foreach ($articles as $article) {
-        $elements = $article['elements'];
         $articleElements = array();
-        $continueExecution = true;
-        foreach ($elements as $element) {
-            if (!empty($element['elementReference'])) {
-                switch ($element['elementReference']) {
-                    case 'article-image':
-                        $url = "./../LIB/MEDIA/IMGS/";
-                        $imageContent = $element['elementContent'] !== "" ? $element['elementContent'] :  "section-example.png";
-                        $articleElements['article-image'] = $url . $imageContent;
-                        break;
-                    case 'article-title':
-                        $articleElements['article-title'] = $element['elementContent'];
-                        break;
-                    case 'article-text':
-                        $articleElements['article-text'] = $element['elementContent'];
-                        break;
-                }
-            } else {
-                $articleElements = getDefaultArticleElementsInfo($articleElements);
-                $continueExecution = false;
-            }
-            if (!$continueExecution) {
-                continue;
-            }
+        $elements = $article['elements'];
+        if (empty($elements)) {
+            $articleId = $article['id'];
+            createArticleElements($articleId);
+            $elements = getArticleElements($articleId);
         }
-        switch ($article['templateType']) {
+        foreach ($elements as $element) {
+            $articleElements[] = array(
+                'id' => $element['id'],
+                $element['reference'] => $element['content']
+            );
+        }
+        switch ($article['template']) {
             case '1':
-                renderTemplate1($articleElements, $article['articleId']);
+                renderTemplate1($articleElements, $article['id']);
                 break;
             case '2':
-                renderTemplate2($articleElements, $article['articleId']);
+                renderTemplate2($articleElements, $article['id']);
                 break;
         }
     }
@@ -91,17 +77,21 @@ function renderArticles($articles)
 
 function renderTemplate1($elements, $articleId)
 {
+    $url = '?page-editor&town=' . $_GET['town'] . '&table=articles_elements&action=edit&';
+    foreach ($elements as $key => $element) {
+        $url .= '&element-' . $key + 1 . '=' . $element['id'];
+    }
     echo '
         <article class="page-article template-1 mb-5">
-            <form action="?page-editor&handle-article&edit-article=' . $articleId . '" method="POST" enctype="multipart/form-data">
-                <div class="delete-article-btn"><a href="?page-editor&handle-article&delete-article= ' . $articleId . '"><span>X</span></a></div>
+            <form action="' . $url . '" method="POST" enctype="multipart/form-data">
+                <div class="delete-article-btn"><a href="?page-editor&town=' . $_GET['town'] . '&table=articles&action=delete&id= ' . $articleId . '"><span>X</span></a></div>
                 <div class="row mb-2">
                     <div class="col-6">
                         <div class="img-container">
                             <input type="file" name="article-image" id="article-' . $articleId . '-image" 
                                 accept="image/*" class="image-upload d-none">
                             <label for="article-' . $articleId . '-image" class="editable-image-label">
-                                <img src="' . $elements['article-image'] . '" class="article-image editable-image img-fluid" 
+                                <img src="./../LIB/MEDIA/IMGS/' . $elements[0]['article-image'] . '" class="article-image editable-image img-fluid" 
                                     alt="Article town image">
                             </label>
                         </div>
@@ -109,12 +99,12 @@ function renderTemplate1($elements, $articleId)
                     <div class="col-6">
                         <div class="article-title-container text-center">
                             <h2 class="article-title d-inline-block">
-                                <input type="text" name="article-title" value="' . $elements['article-title'] . '">
+                                <input type="text" name="article-title" value="' . $elements[1]['article-title'] . '">
                             </h2>
                         </div>
-                        <div class="article-text-container">
-                            <p class="article-text" >
-                                <input type="text" name="article-text" value ="' . $elements['article-text'] . '">
+                        <div class="article-content-container">
+                            <p class="article-content" >
+                                <input type="text" name="article-content" value ="' . $elements[2]['article-content'] . '">
                             </p>
                         </div>
                     </div>
@@ -129,20 +119,24 @@ function renderTemplate1($elements, $articleId)
 
 function renderTemplate2($elements, $articleId)
 {
+    $url = '?page-editor&town=' . $_GET['town'] . '&table=articles_elements&action=edit&';
+    foreach ($elements as $key => $element) {
+        $url .= '&element-' . $key + 1 . '=' . $element['id'];
+    }
     echo '
         <article class="page-article template-2 mb-5">
-            <form action="?page-editor&handle-article&edit-article=' . $articleId . '" method="POST" enctype="multipart/form-data">
-            <div class="delete-article-btn"><a href="?page-editor&handle-article&delete-article= ' . $articleId . '"><span>X</span></a></div>
+            <form action="' . $url . '" method="POST" enctype="multipart/form-data">
+            <div class="delete-article-btn"><a href="?page-editor&town=' . $_GET['town'] . '&table=articles&action=delete&id= ' . $articleId . '"><span>X</span></a></div>
                 <div class="row mb-2">
                     <div class="col-6">
                         <div class="article-title-container text-center">
                             <h2 class="article-title d-inline-block">
-                                <input type="text" name="article-title" value="' . $elements['article-title'] . '">
+                                <input type="text" name="article-title" value="' . $elements[1]['article-title'] . '">
                             </h2>
                         </div>
-                        <div class="article-text-container">
-                            <p class="article-text" >
-                                <input type="text" name="article-text" value ="' . $elements['article-text'] . '">
+                        <div class="article-content-container">
+                            <p class="article-content" >
+                                <input type="text" name="article-content" value ="' . $elements[2]['article-content'] . '">
                             </p>
                         </div>
                     </div>
@@ -151,7 +145,7 @@ function renderTemplate2($elements, $articleId)
                             <input type="file" name="article-image" id="article-' . $articleId . '-image" 
                                 accept="image/*" class="image-upload d-none">
                             <label for="article-' . $articleId . '-image" class="editable-image-label">
-                                <img src="' . $elements['article-image'] . '" class="editable-image img-fluid" 
+                                <img src="./../LIB/MEDIA/IMGS/' . $elements[0]['article-image'] . '" class="editable-image img-fluid" 
                                     alt="Article town image">
                             </label>
                         </div>
@@ -193,17 +187,23 @@ function renderOffCanvasMenu()
                 </div>
                 <div class="offcanvas-body">
                     <ul class="list-unstyled">
-                        <li class="mb-3">
-                            <a href="?page-editor&handle-article&new-template=1" class="text-dark">
-                                <h4 class="mb-0">Artículo 1</h4>
-                                <p>Imagen a la izquierda y texto a la derecha</p>
-                            </a>
-                        </li>
-                        <li class="mb-3">
-                            <a href="?page-editor&handle-article&new-template=2" class="text-dark">
-                                <h4 class="mb-0">Artículo 2</h4>
-                                <p>Texto a la izquierda e imagen a la derecha</p>
-                            </a>
+                        <li>
+                            <form action="?page-editor&town=' . $_GET['town'] . '&table=articles&action=create" method="post" class="template-form">
+                                <input type="hidden" name="page" value="' . $_SESSION['pageId'] . '">
+                                <input type="hidden" name="template" value="1">
+                                <button type="submit" class="btn text-dark bg-white text-start p-0">
+                                    <h4 class="mb-0">Artículo 1</h4>
+                                    <p>Texto a la derecha e imagen a la izquierda</p>
+                                </button>
+                            </form>
+                            <form action="?page-editor&town=' . $_GET['town'] . '&table=articles&action=create" method="post" class="template-form">
+                                <input type="hidden" name="page" value="' . $_SESSION['pageId'] . '">
+                                <input type="hidden" name="template" value="2">
+                                <button type="submit" class="btn text-dark bg-white text-start p-0">
+                                    <h4 class="mb-0">Artículo 2</h4>
+                                    <p>Texto a la izquierda e imagen a la derecha</p>
+                                </button>
+                            </form>
                         </li>
                     </ul>
                 </div>
@@ -231,13 +231,4 @@ function renderPageFooter()
             </div>
         </footer>
         ';
-}
-
-function getDefaultArticleElementsInfo()
-{
-    $articleElements = array();
-    $articleElements['article-image'] = "./../LIB/MEDIA/IMGS/section-example.png";
-    $articleElements['article-title'] = "Article Title";
-    $articleElements['article-text'] = "Write your text here";
-    return $articleElements;
 }

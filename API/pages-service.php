@@ -4,7 +4,6 @@ include "./../LIB/COMMON/PHP/towns-service.php";
 include "./../LIB/COMMON/PHP/pages-service.php";
 include "./../LIB/COMMON/PHP/articles-service.php";
 
-
 if (isset($_GET['get-page'])) {
     $pageId = $_GET['get-page'];
     $pageContent = getPageContentFromPageId($pageId);
@@ -18,27 +17,28 @@ if (isset($_GET['get-page'])) {
         echo json_encode(array('responseCode' => 400, 'message' => 'El comentario no pudo ser enviado'));
     }
 } else if (isset($_GET['get-comments'])) {
-    if (isset($_GET['pageId'])) {
-        $comments = getComments($_GET['pageId']);
+    if (isset($_GET['id'])) {
+        $comments = getComments($_GET['id']);
         echo json_encode($comments);
     }
+} else if (isset($_GET['get-rating'])) {
+    echo getRating($_GET['id'])['rating'];
 }
-
 
 function saveComment()
 {
     $json_data = file_get_contents("php://input");
     $commentData = json_decode($json_data, true);
 
-    $userId = $commentData['userId'];
-    $pageId = $commentData['pageId'];
+    $user = $commentData['user'];
+    $page = $commentData['page'];
     $rating = $commentData['rating'];
-    $commentText = $commentData['commentText'];
+    $text = $commentData['text'];
 
     $connection = connect();
-    $insertQuery = "insert into reviews(userId, rating, commentText, pageId) values(?, ?, ?, ?)";
+    $insertQuery = "insert into reviews(user, rating, text, page) values(?, ?, ?, ?)";
     $statement = $connection->prepare($insertQuery);
-    $statement->bind_param("iisi", $userId, $rating, $commentText, $pageId);
+    $statement->bind_param("iisi", $user, $rating, $text, $page);
     $insertResult = $statement->execute();
     close($connection);
     return $insertResult;
@@ -47,13 +47,23 @@ function saveComment()
 function getComments($pageId)
 {
     $sql = '
-        SELECT u.firstname, u.lastname, r.commentText, r.rating 
+        SELECT u.firstname, u.lastname, r.text, r.rating 
         FROM reviews r
         INNER JOIN town_pages tp
-        ON r.pageId = tp.pageId
+        ON r.page = tp.id
         INNER JOIN users u
-        ON r.userId = u.userId
-        WHERE r.pageId = ' . $pageId . ';
+        ON r.user = u.id
+        WHERE r.page = ' . $pageId . ';
     ';
     return getMultipleSearchResult($sql);
+}
+
+function getRating($pageId)
+{
+    $sql = '
+        SELECT AVG(rating) as rating
+        FROM reviews 
+        WHERE page = ' . $pageId . ' 
+    ';
+    return getSingleSearchResult($sql);
 }

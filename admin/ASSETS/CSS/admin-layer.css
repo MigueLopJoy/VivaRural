@@ -25,6 +25,10 @@
     color: #fff !important;
 }
 
+.results-box {
+    height: 75vh;
+}
+
 .close-table-container span {
     top: 1rem;
     right: 1rem;

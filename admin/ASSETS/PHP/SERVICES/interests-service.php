@@ -13,3 +13,9 @@ function getInterests($interestData)
     $sql .= ';';
     return getMultipleSearchResult($sql);
 }
+
+function getLastInterests()
+{
+    $sql = 'SELECT MAX(id) as id FROM interests;';
+    return getSingleSearchResult($sql);
+}

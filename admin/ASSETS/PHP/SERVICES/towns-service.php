@@ -1,8 +1,8 @@
 <?php
 
-function getLastInsertedTownId()
+function getLastTowns()
 {
-    $sql = 'SELECT MAX(townId) as townId FROM towns;';
+    $sql = 'SELECT MAX(id) as id FROM towns;';
     return getSingleSearchResult($sql);
 }
 
@@ -14,12 +14,6 @@ function getTowns($townData)
         FROM towns t
         WHERE 1
     ';
-    $sql = addTownFilters($sql);
-    $sql .= ';';
-    return getMultipleSearchResult($sql);
-}
-
-function addTownFilters($sql) {
     if (!empty($townData['townName'])) {
         $sql .= ' AND t.townName = "' . $townData['townName'] . '"';
     }
@@ -38,5 +32,6 @@ function addTownFilters($sql) {
     if (!empty($townData['maxRating'])) {
         $sql .= ' AND t.rating <= "' . $townData['maxRating'] . '"';
     }
-    return $sql;
+    $sql .= ';';
+    return getMultipleSearchResult($sql);
 }

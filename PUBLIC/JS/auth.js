@@ -1,6 +1,6 @@
 import { fetchHandler, getRequestData } from "./fetchHandler.js"
 
-import { openModal } from "./utils.js"
+import { openModal, getCookie } from "./utils.js"
 
 import { getPageId } from "./townPages.js"
 
@@ -35,9 +35,10 @@ const login = async loginForm => {
     try {
         let loginResult = await fetchHandler(url, getRequestData("POST", JSON.stringify(userData)))
         d.cookie = 'userId=' + loginResult.userId
-        location.href = location.href.includes('pageId') ?
-            `http://localhost/practicas/vivarural/public/HTML/town-page.html?pageId=${getPageId()}` : location.href
+        location.href = location.href.includes('id') ?
+            `http://localhost/practicas/vivarural/public/HTML/town-page.html?id=${getPageId()}` : location.href
     } catch (error) {
+        console.log(error)
         d.querySelector('.login-error').classList.remove('d-none')
     }
 }
@@ -55,20 +56,22 @@ const register = async registerForm => {
         }
     try {
         await fetchHandler(url, getRequestData("POST", JSON.stringify(userData)))
-        location.href = location.href.includes('pageId') ?
-            location.href + '&registration-success=true' :
-            location.href + 'registration-success=true'
+        let suffix = location.href.includes('id') ? '&registration-success=true' : '?registration-success=true';
+        location.href = location.href.includes('index') ? location.href + suffix : location.href + 'index.html' + suffix;
     } catch (error) {
+        console.log(error)
         d.querySelector(".registration-error").classList.remove("d-none")
     }
 }
 
 const notifyRegistrationSuccess = () => {
-    let urlParams = new URLSearchParams(window.location.search),
-        successParam = urlParams.get('registration-success')
-    if (successParam === 'true') {
-        openModal()
-        d.querySelector('.registration-success').classList.remove('d-none')
+    if (getCookie("userId") === null) {
+        let urlParams = new URLSearchParams(window.location.search),
+            successParam = urlParams.get('registration-success')
+        if (successParam === 'true') {
+            openModal()
+            d.querySelector('.registration-success').classList.remove('d-none')
+        }
     }
 }
 

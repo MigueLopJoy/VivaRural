@@ -1,9 +1,5 @@
 /* EDITABLE CONTENT STYLES */
 
-/* .banner-img-container {
-    background-image: url(./../../../LIB/MEDIA/IMGS/example-banner.png) !important;
-} */
-
 .banner-img-container:hover {
     transform: scaleY(1.1);
     outline: 2px solid #222;
@@ -123,18 +119,16 @@
     margin: .25rem;
 }
 
-/* OFFCANVAS NEW ELEMENTS MENU STYLES */
+/* OFFCANVAS NEW ELEMENTS MENU */
 
-.elements-side-menu a {
-    color: #222;
-    text-decoration: none !important;
+.template-form button:active {
+    outline: none;
 }
 
-.elements-side-menu a:hover h4,
-.elements-side-menu a:hover p {
+.template-form button:hover h4,
+.template-form button:hover p {
     color: #666;
 }
-
 
 /* PAGE FOOTER */
 

@@ -25,14 +25,18 @@ const loadHtmlComponent = async (url, parentElement) => {
     parentElement.innerHTML += layer
 }
 
-const getCookie = name => {
-    let cookieName = name + "=",
-        cookie = d.cookie
-    if (cookie.indexOf(cookieName) === 0) {
-        return cookie.substring(cookieName.length, cookie.length)
+function getCookie(cookieName) {
+    let name = cookieName + "=",
+        cookieArray = d.cookie.split(';')
+    for (let i = 0; i < cookieArray.length; i++) {
+        let cookie = cookieArray[i]
+        if (cookie.indexOf(name) === 0) {
+            return cookie.substring(name.length, cookie.length);
+        }
     }
-    return null
+    return null;
 }
+
 
 export {
     loadHtmlComponent,

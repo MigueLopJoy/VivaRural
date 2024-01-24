@@ -2,17 +2,17 @@
 include "./../LIB/COMMON/PHP/dbConnection.php";
 
 if (isset($_GET['get-destinations'])) {
-    $response = getHighlightedDestinations();
+    $response = getDestinations();
     echo json_encode($response);
 }
 
-function getHighlightedDestinations()
+function getDestinations()
 {
     $sql = '
-        SELECT t.townName, tp.pageId, tp.thumbnail
+        SELECT t.name, tp.id, t.thumbnail
         FROM towns t 
         INNER JOIN town_pages tp
-        ON t.townId = tp.townId
+        ON t.id = tp.town
     ';
     return getMultipleSearchResult($sql);
 }
